@@ -1,0 +1,9 @@
+[submodule "libraries/DHT"]
+	path = libraries/DHT
+	url = https://github.com/adafruit/DHT-sensor-library
+[submodule "libraries/ethercard"]
+	path = libraries/ethercard
+	url = https://github.com/jcw/ethercard
+[submodule "libraries/NewLiquidCrystal"]
+	path = libraries/NewLiquidCrystal
+	url = ./libraries/NewLiquidCrystal/
