@@ -1,4 +1,4 @@
-#include <EtherCard.h>
+/*#include <EtherCard.h>
 #include <avr/pgmspace.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -67,5 +67,4 @@ void etherSendHTTPRequest(float temperature, float humidity, float coLevel, floa
 
 void etherPacketLoop(){
   ether.packetLoop(ether.packetReceive());
-}
-
+}*/

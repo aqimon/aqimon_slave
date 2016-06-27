@@ -4,12 +4,12 @@
 DHT dht(DHT_PIN, DHT21);
 
 void dhtInit(){
-	dht.begin
+	dht.begin();
 }
 
 void dhtRead(float* temperature, float* humidity){
-	*temperature=dht21.readTemperature();
-	*humidity=dht21.readHumidity();
+	*temperature=dht.readTemperature();
+	*humidity=dht.readHumidity();
 	if (*temperature!=*temperature)
 		*temperature=30;
 	if (*humidity!=*humidity)

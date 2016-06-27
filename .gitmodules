@@ -7,3 +7,6 @@
 [submodule "libraries/NewLiquidCrystal"]
 	path = libraries/NewLiquidCrystal
 	url = ./libraries/NewLiquidCrystal/
+[submodule "libraries/AltSoftSerial"]
+	path = libraries/AltSoftSerial
+	url = https://github.com/PaulStoffregen/AltSoftSerial
