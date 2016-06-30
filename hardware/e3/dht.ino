@@ -3,15 +3,15 @@
 
 DHT dht(DHT_PIN, DHT21);
 
-void dhtInit(){
+void dhtInit() {
 	dht.begin();
 }
 
-void dhtRead(float* temperature, float* humidity){
-	*temperature=dht.readTemperature();
-	*humidity=dht.readHumidity();
-	if (*temperature!=*temperature)
-		*temperature=30;
-	if (*humidity!=*humidity)
-		*humidity=30;
+void dhtRead(float* temperature, float* humidity) {
+	*temperature = dht.readTemperature();
+	*humidity = dht.readHumidity();
+	if (*temperature != *temperature)
+		*temperature = 30;
+	if (*humidity != *humidity)
+		*humidity = 30;
 }

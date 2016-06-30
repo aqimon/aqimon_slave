@@ -8,7 +8,7 @@
 
 LiquidCrystal_I2C lcd(LCD_I2C_BUS, 2, 1, 0, 4, 5, 6, 7);
 
-void lcdInit(){
+void lcdInit() {
 	lcd.setBacklightPin(3, POSITIVE);
 	lcd.backlight();
 	lcd.begin(20, 4);
@@ -16,7 +16,7 @@ void lcdInit(){
 	Serial.println("[info] lcd initialized");
 }
 
-void lcdUpdateTempHumid(float temperature, float humidity){
+void lcdUpdateTempHumid(float temperature, float humidity) {
 	char tempStr[5], humidStr[3];
 	dtostrf(temperature, 4, 1, tempStr);
 	dtostrf(humidity, 2, 0, humidStr);
@@ -28,7 +28,7 @@ void lcdUpdateTempHumid(float temperature, float humidity){
 	lcd.print("%");
 }
 
-void lcdUpdateDustCo(float dustLevel, float coLevel){
+void lcdUpdateDustCo(float dustLevel, float coLevel) {
 	char dustLevelStr[5], coLevelStr[5];
 	dtostrf(dustLevel, 4, 2, dustLevelStr);
 	dtostrf(coLevel, 4, 2, coLevelStr);

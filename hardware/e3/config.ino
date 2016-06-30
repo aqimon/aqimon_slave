@@ -1,35 +1,18 @@
-/*#include <avr/eeprom.h>
-#define CONFIG_EEPROM_ADDRESS 0
+#include <avr/eeprom.h>
 
-typedef unsigned char str[50];
-typedef unsigned char ipAddr[4];
-struct staticIP_s {
-	ipAddr ip;
-	ipAddr subnetMask;
-	ipAddr defaultGateway;
-};
+struct config_s config;
 
-struct wifiSettings_s {
-	str ssid;
-	str password;
-};
-
-struct config_s {
-	struct staticIP_s etherIP;
-	struct staticIP_s wifiIP;
-	struct wifiSettings_s wifiSettings;
-	ipAddr dns;
-	str hostname;
-	str apiKey;
-} config;
-
-void configRead(){
-	eeprom_read_block(&config, CONFIG_EEPROM_ADDRESS, sizeof(config));
+void configRead() {
+	eeprom_read_block((void*)&config, (void*)0, sizeof(config));
 }
 
-void configWrite(){
-	eeprom_update_block(&config, CONFIG_EEPROM_ADDRESS, sizeof(config));
-}*/
+void configWrite() {
+	eeprom_update_block((void*)&config, (void*)0, sizeof(config));
+}
 
-
-
+void fillEEPROM() {
+	int i;
+	for (i = 0; i < 1024; i++) {
+		eeprom_write_byte((uint8_t*)i, 0);
+	}
+}

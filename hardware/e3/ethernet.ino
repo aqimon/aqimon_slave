@@ -13,16 +13,16 @@ const char clientID[]="08";
 
 
 void etherInit(){
-	// TODO: Handle static IP
-if (ether.begin(sizeof Ethernet::buffer, macAddr) == 0) 
+  // TODO: Handle static IP
+if (ether.begin(sizeof Ethernet::buffer, macAddr) == 0)
     Serial.println(F("Failed to access Ethernet controller"));
     Serial.print("cxxx");
   if (!ether.dhcpSetup())
     Serial.println(F("DHCP failed"));
 
   ether.printIp("IP:  ", ether.myip);
-  ether.printIp("GW:  ", ether.gwip);  
-  ether.printIp("DNS: ", ether.dnsip);  
+  ether.printIp("GW:  ", ether.gwip);
+  ether.printIp("DNS: ", ether.dnsip);
 
 }
 Stash stash;
@@ -33,7 +33,7 @@ void etherSendHTTPRequest(float temperature, float humidity, float coLevel, floa
   ether.hisip[2]=0;
   ether.hisip[3]=100;
   ether.hisport=5000;
-	char tempStr[6], humidStr[6], dustStr[5], coStr[5];
+  char tempStr[6], humidStr[6], dustStr[5], coStr[5];
   dtostrf(temperature, 5, 2, tempStr);
   dtostrf(humidity, 5, 2, humidStr);
   dtostrf(dustLevel, 4, 2, dustStr);
