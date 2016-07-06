@@ -1,3 +1,4 @@
+#include "commonVariables.h"
 #include <LiquidCrystal_I2C.h>
 #include <LiquidCrystal.h>
 #include <LCD.h>
@@ -43,6 +44,27 @@ void lcdWrite(char* msg) {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print(msg);
+}
+
+void lcdUpdateWifiStatus(unsigned char status){
+    lcd.setCursor(0, 1);
+    switch (status){
+        case WIFI_STARTING:
+            lcd.print(F("Wifi starting       "));
+            break;
+        case WIFI_CONNECTING_AP:
+            lcd.print(F("Connecting to AP    "));
+            break;
+        case WIFI_CONNECTING_HTTP:
+            lcd.print(F("Connecting to server"));
+            break;
+        case WIFI_SENDING:
+            lcd.print(F("Sending request     "));
+            break;
+        case WIFI_SENDOK:
+            lcd.print(F("Send successful     "));
+            break;
+    }
 }
 
 void lcdClear() {

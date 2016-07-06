@@ -4,6 +4,8 @@
 
 #define WIFI_TX 3
 #define WIFI_RX 4
+#define WIFI_RST 11
+#define WIFI_CHPD 12
 #define LINE_BUFFER_SIZE 64
 #define WIFI_BUFFER_SIZE 256
 
@@ -13,13 +15,27 @@ int wifiMsgLen;
 unsigned char lockNewLine = 0, hasNewLine = 0;
 
 void wifiInit() {
-    wifi.begin(9600); // the lowest baudrate that works, 1200 don't work. 2400 is unstable
+    //pinMode(WIFI_RST, OUTPUT);
+    //pinMode(WIFI_CHPD, OUTPUT);
+    //wifiReset();
+    wifi.begin(9600); // the lowest baudrate that works, 1200 don't work. 2400 is unstable, 4800?
     //wifiLoop();
+    lcdUpdateWifiStatus(WIFI_STARTING);
     wifi.write("AT+RST\r\n");
     delay(2000);
-    wifiExecute("ATE1");
+    wifiExecute("ATE0");
     wifiExecute("AT+GMR");
     wifiExecute("AT+CWMODE_CUR=1");
+}
+
+void wifiReset(){
+    digitalWrite(WIFI_RST, LOW);
+    digitalWrite(WIFI_CHPD, LOW);
+    delay(1000);
+    digitalWrite(WIFI_RST, HIGH);
+    delay(2000);
+    digitalWrite(WIFI_CHPD, HIGH);
+    delay(2000);
 }
 
 void wifiExecute(char* command) {
@@ -34,11 +50,13 @@ void wifiExecute(char* command) {
             if (strstr(lineBuffer, "OK") != NULL) {
                 Serial.println(F("end of command, ok received"));
                 unlockNewLineBuffer();
+                delay(500);
                 return;
             }
             if (strstr(lineBuffer, "ERROR") != NULL) {
                 Serial.println(F("end of command, error received"));
                 unlockNewLineBuffer();
+                delay(500);
                 return;
             }
             unlockNewLineBuffer();
@@ -89,6 +107,7 @@ void wifiLoop() {
 }
 
 void wifiConnectToAP() {
+    lcdUpdateWifiStatus(WIFI_CONNECTING_AP);
     char commandBuf[128];
     sprintf_P(commandBuf, PSTR("AT+CWJAP_CUR=\"%s\",\"%s\""), config.ssidName, config.ssidPassword);
     wifiExecute(commandBuf);
@@ -108,10 +127,11 @@ void wifiSendHTTPRequest(float temperature, float humidity, float dustLevel, flo
     dtostrf(coLevel, 4, 2, coStr);
 
     wifiExecute("AT+CIPMUX=0");
-
+    lcdUpdateWifiStatus(WIFI_CONNECTING_HTTP);
     sprintf_P(sendBuffer, PSTR("AT+CIPSTART=\"TCP\",\"%s\",%d"), config.host, config.port);
     wifiExecute(sendBuffer);
 
+    lcdUpdateWifiStatus(WIFI_SENDING);
     int bufferLen;
     sprintf_P(sendBuffer, PSTR("GET /api/add/event?client_id=%s&temperature=%s&humidity=%s&dustlevel=%s&colevel=%s&apikey=%s HTTP/1.1\r\n"
                                "Host: %s\r\n"
@@ -129,7 +149,5 @@ void wifiSendHTTPRequest(float temperature, float humidity, float dustLevel, flo
     wifiExecute(tmp);
     wifiExecute(sendBuffer);
     wifiExecute("AT+CIPCLOSE");
-    wifi.write("AT+RST\r\n");
-    delay(2000);
-    wifiExecute("AT+CWMODE_CUR=1");
+    lcdUpdateWifiStatus(WIFI_SENDOK);
 }
