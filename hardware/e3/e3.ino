@@ -1,9 +1,16 @@
-#include "commonVariables.h"
-#include "config.h"
+#include "const.h"
+#include "sensors/DHT.h"
+#include "sensors/dust.h"
+#include "config/config.h"
+#include "lcd/lcd.h"
+#include "wifi/wifiCore.h"
+#include "wifi/wifiClient.h"
+#include "wifi/wifiServer.h"
+
+float dustDensity, voltage, temperature, humidity;
 
 void setup() {
     Serial.begin(9600);
-//  etherInit();
     lcdInit();
     dustInit();
     dhtInit();
@@ -11,22 +18,22 @@ void setup() {
     configRead();
     strcpy(config.ssidName, "Floor 5");
     strcpy(config.ssidPassword, "123haiphong");
-    strcpy(config.apiKey, "crBurWijvHGLwc51UKeo");
-    strcpy(config.clientID, "f96521a9-7b0c-4658-8a6a-18bee82f3dfe");
     configWrite();
-    wifiInit();
-    wifiConnectToAP();
     lcdClear();
     lcdWrite("E3 client v0.1");
-}
-
-float dustDensity, voltage, temperature, humidity;
-
-void loop() {
     dustRead(&voltage, &dustDensity);
     dhtRead(&temperature, &humidity);
     lcdUpdateTempHumid(temperature, humidity);
     lcdUpdateDustCo(voltage, dustDensity);
-    wifiSendHTTPRequest(temperature, humidity, voltage, dustDensity);
+    wifiInit();
+}
+
+void loop() {
+    if (!wifiSendHTTPRequest(temperature, humidity, voltage, dustDensity))
+        wifiInit();
     delay(5000);
+    dustRead(&voltage, &dustDensity);
+    dhtRead(&temperature, &humidity);
+    lcdUpdateTempHumid(temperature, humidity);
+    lcdUpdateDustCo(voltage, dustDensity);
 }

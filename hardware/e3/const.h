@@ -13,3 +13,5 @@
 #define WIFI_CONNECTING_HTTP 3
 #define WIFI_SENDING 4
 #define WIFI_SENDOK 6
+#define WIFI_RESET 7
+#define WIFI_TIMEOUT 8

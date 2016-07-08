@@ -1,4 +1,5 @@
 #include <avr/eeprom.h>
+#include "config.h"
 
 struct config_s config;
 

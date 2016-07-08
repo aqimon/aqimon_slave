@@ -1,11 +1,4 @@
-#include "commonVariables.h"
-#include <LiquidCrystal_I2C.h>
-#include <LiquidCrystal.h>
-#include <LCD.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#define LCD_I2C_BUS 0x3F
+#include "lcd.h"
 
 LiquidCrystal_I2C lcd(LCD_I2C_BUS, 2, 1, 0, 4, 5, 6, 7);
 
@@ -24,6 +17,7 @@ void lcdUpdateTempHumid(float temperature, float humidity) {
     lcd.setCursor(0, 2);
     lcd.print(F("Temp:"));
     lcd.print(tempStr);
+    lcd.print(F("C"));
     lcd.print(F(" Humid:"));
     lcd.print(humidStr);
     lcd.print("%");
@@ -63,6 +57,12 @@ void lcdUpdateWifiStatus(unsigned char status){
             break;
         case WIFI_SENDOK:
             lcd.print(F("Send successful     "));
+            break;
+        case WIFI_RESET:
+            lcd.print(F("Got error, resetting"));
+            break;
+        case WIFI_TIMEOUT:
+            lcd.print(F("Timeout             "));
             break;
     }
 }

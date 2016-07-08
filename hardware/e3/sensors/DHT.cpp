@@ -1,5 +1,4 @@
 #include "DHT.h"
-#define DHT_PIN 10
 
 DHT dht(DHT_PIN, DHT21);
 

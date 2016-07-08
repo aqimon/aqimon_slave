@@ -1,4 +1,4 @@
-#include "commonVariables.h"
+#include "const.h"
 #define LED_DS 6 // data
 #define LED_STCP 7 // latch
 #define LED_SHCP 9 // clock
