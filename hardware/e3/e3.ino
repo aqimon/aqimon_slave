@@ -11,29 +11,29 @@ float dustDensity, voltage, temperature, humidity;
 
 void setup() {
     Serial.begin(9600);
-    lcdInit();
-    dustInit();
-    dhtInit();
-    ledInit();
+//    lcdInit();
+//    dustInit();
+//    dhtInit();
+//    ledInit();
     configRead();
-    strcpy(config.ssidName, "Floor 5");
-    strcpy(config.ssidPassword, "123haiphong");
-    configWrite();
-    lcdClear();
-    lcdWrite("E3 client v0.1");
-    dustRead(&voltage, &dustDensity);
-    dhtRead(&temperature, &humidity);
-    lcdUpdateTempHumid(temperature, humidity);
-    lcdUpdateDustCo(voltage, dustDensity);
+//    lcdClear();
+//   lcdWrite("E3 client v0.1");
+//   dustRead(&voltage, &dustDensity);
+//    dhtRead(&temperature, &humidity);
+//    lcdUpdateTempHumid(temperature, humidity);
+//    lcdUpdateDustCo(voltage, dustDensity);
     wifiInit();
+    wifiServerInit();
+    //wifiLoop();
+    wifiServerListener();
 }
 
 void loop() {
-    if (!wifiSendHTTPRequest(temperature, humidity, voltage, dustDensity))
-        wifiInit();
-    delay(5000);
-    dustRead(&voltage, &dustDensity);
-    dhtRead(&temperature, &humidity);
-    lcdUpdateTempHumid(temperature, humidity);
-    lcdUpdateDustCo(voltage, dustDensity);
+//    if (!wifiSendHTTPRequest(temperature, humidity, voltage, dustDensity))
+//        wifiInit();
+//    delay(5000);
+//    dustRead(&voltage, &dustDensity);
+//    dhtRead(&temperature, &humidity);
+//    lcdUpdateTempHumid(temperature, humidity);
+//    lcdUpdateDustCo(voltage, dustDensity);
 }

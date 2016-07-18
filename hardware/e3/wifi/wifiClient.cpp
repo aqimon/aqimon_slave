@@ -1,5 +1,12 @@
 #include "wifiClient.h"
 
+unsigned char wifiConnectToAP() {
+    lcdUpdateWifiStatus(WIFI_CONNECTING_AP);
+    char commandBuf[128];
+    sprintf_P(commandBuf, PSTR("AT+CWJAP_CUR=\"%s\",\"%s\""), config.ssidName, config.ssidPassword);
+    return wifiExecute(commandBuf);
+}
+
 unsigned char wifiSendHTTPRequest(float temperature, float humidity, float dustLevel, float coLevel) {
     char tempStr[6],
          humidStr[6],
@@ -13,7 +20,7 @@ unsigned char wifiSendHTTPRequest(float temperature, float humidity, float dustL
     dtostrf(dustLevel, 4, 2, dustStr);
     dtostrf(coLevel, 4, 2, coStr);
 
-    if (!wifiExecute("AT+CIPMUX=0"))
+    if (!wifiExecute(PSTR("AT+CIPMUX=1")))
         return 0;
     lcdUpdateWifiStatus(WIFI_CONNECTING_HTTP);
     sprintf_P(sendBuffer, PSTR("AT+CIPSTART=\"TCP\",\"%s\",%d"), config.host, config.port);
@@ -21,10 +28,11 @@ unsigned char wifiSendHTTPRequest(float temperature, float humidity, float dustL
         return 0;
 
     lcdUpdateWifiStatus(WIFI_SENDING);
-    int bufferLen;
-    sprintf_P(sendBuffer, PSTR("GET /api/add/event?client_id=%s&temperature=%s&humidity=%s&dustlevel=%s&colevel=%s&apikey=%s HTTP/1.1\r\n"
-                               "Host: %s\r\n"
-                               "\r\n"),
+
+    wifiInitiateSend(0);
+    fprintf_P(&stream, PSTR("GET /api/add/event?client_id=%s&temperature=%s&humidity=%s&dustlevel=%s&colevel=%s&apikey=%s HTTP/1.1\r\n"
+                           "Host: %s\r\n"
+                           "\r\n"),
               config.clientID,
               tempStr,
               humidStr,
@@ -33,13 +41,6 @@ unsigned char wifiSendHTTPRequest(float temperature, float humidity, float dustL
               config.apiKey,
               config.host);
 
-    bufferLen = strlen(sendBuffer);
-    sprintf_P(tmp, PSTR("AT+CIPSEND=%d"), bufferLen);
-    if (!wifiExecute(tmp))
-        return 0;
-    if (!wifiExecute(sendBuffer))
-        return 0;
-    if (!wifiExecute("AT+CIPCLOSE"))
-        return 0;
+    wifiEndSend();
     lcdUpdateWifiStatus(WIFI_SENDOK);
 }

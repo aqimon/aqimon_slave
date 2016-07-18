@@ -1,3 +1,21 @@
+/*** uncss> filename: static/bootstrap.css ***/
+
+/*!
+ * bootswatch v3.3.6
+ * Homepage: http://bootswatch.com
+ * Copyright 2012-2016 Thomas Park
+ * Licensed under MIT
+ * Based on Bootstrap
+*/
+
+/*!
+ * Bootstrap v3.3.6 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -14,8 +32,7 @@ h1 {
 }
 
 button,
-input,
-select {
+input {
   color: inherit;
   font: inherit;
   margin: 0;
@@ -25,8 +42,7 @@ button {
   overflow: visible;
 }
 
-button,
-select {
+button {
   text-transform: none;
 }
 
@@ -43,6 +59,30 @@ input::-moz-focus-inner {
 
 input {
   line-height: normal;
+}
+
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
+
+@media print {
+  *,
+  *:before,
+  *:after {
+    background: transparent !important;
+    color: #000 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../fonts/glyphicons/glyphicons-halflings-regular.eot');
+  src: url('../fonts/glyphicons/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/glyphicons/glyphicons-halflings-regular.woff2') format('woff2'),
+       url('../fonts/glyphicons/glyphicons-halflings-regular.woff') format('woff'),
+       url('../fonts/glyphicons/glyphicons-halflings-regular.ttf') format('truetype'),
+       url('../fonts/glyphicons/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
 * {
@@ -72,8 +112,7 @@ body {
 }
 
 input,
-button,
-select {
+button {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
@@ -100,54 +139,6 @@ h1 {
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
-}
-
-.col-sm-1,
-.col-sm-2,
-.col-sm-3,
-.col-sm-6,
-.col-sm-10 {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-@media (min-width: 768px) {
-  .col-sm-1,
-  .col-sm-2,
-  .col-sm-3,
-  .col-sm-6,
-  .col-sm-10 {
-    float: left;
-  }
-
-  .col-sm-10 {
-    width: 83.33333333%;
-  }
-
-  .col-sm-6 {
-    width: 50%;
-  }
-
-  .col-sm-3 {
-    width: 25%;
-  }
-
-  .col-sm-2 {
-    width: 16.66666667%;
-  }
-
-  .col-sm-1 {
-    width: 8.33333333%;
-  }
-}
-
-label {
-  display: inline-block;
-  max-width: 100%;
-  margin-bottom: 5px;
-  font-weight: bold;
 }
 
 .form-control {
@@ -188,23 +179,6 @@ label {
 .form-control::-ms-expand {
   border: 0;
   background-color: transparent;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-horizontal .form-group {
-  margin-left: -15px;
-  margin-right: -15px;
-}
-
-@media (min-width: 768px) {
-  .form-horizontal .control-label {
-    text-align: right;
-    margin-bottom: 0;
-    padding-top: 11px;
-  }
 }
 
 .btn {
@@ -289,16 +263,28 @@ label {
   width: 100%;
 }
 
+.btn-block + .btn-block {
+  margin-top: 5px;
+}
+
+.well {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: #ecf0f1;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
 .container-fluid:before,
-.container-fluid:after,
-.form-horizontal .form-group:before,
-.form-horizontal .form-group:after {
+.container-fluid:after {
   content: " ";
   display: table;
 }
 
-.container-fluid:after,
-.form-horizontal .form-group:after {
+.container-fluid:after {
   clear: both;
 }
 
@@ -326,5 +312,38 @@ input {
 input:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+.well {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+body {
+  background: -webkit-linear-gradient(135deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), -webkit-linear-gradient(45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), rgb(0, 153, 151);
+  background: -moz-linear-gradient(-45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), -moz-linear-gradient(45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), rgb(0, 153, 151);
+  background: linear-gradient(-45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), linear-gradient(45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), rgb(0, 153, 151);
+  background-position: auto auto;
+  -webkit-background-origin: padding-box;
+  background-origin: padding-box;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-background-size: 100em 100em;
+  background-size: 100px 100px;
+}
+
+.container-fluid {
+  width: 90vw;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+.well {
+  background-color: #EEEEEE;
+  box-shadow: 0 0 30px grey;
 }
 

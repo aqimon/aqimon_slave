@@ -20,5 +20,5 @@
     void configRead();
     void configWrite();
     void fillEEPROM();
-
+    int configParseRequest(char *req)
 #endif
