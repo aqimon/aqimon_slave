@@ -1,11 +1,11 @@
 #ifndef LCD_H
 
 	#include "../const.h"
+	#include <I2CIO.h>
 	#include <LiquidCrystal_I2C.h>
+	#include <LiquidCrystal_I2C_ByVac.h>
 	#include <LiquidCrystal.h>
 	#include <LCD.h>
-	#include <stdio.h>
-	#include <stdlib.h>
 
 	#define LCD_I2C_BUS 0x3F
 

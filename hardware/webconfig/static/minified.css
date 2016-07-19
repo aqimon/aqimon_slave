@@ -1,21 +1,3 @@
-/*** uncss> filename: static/bootstrap.css ***/
-
-/*!
- * bootswatch v3.3.6
- * Homepage: http://bootswatch.com
- * Copyright 2012-2016 Thomas Park
- * Licensed under MIT
- * Based on Bootstrap
-*/
-
-/*!
- * Bootstrap v3.3.6 (http://getbootstrap.com)
- * Copyright 2011-2015 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
-
-/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
-
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -59,30 +41,6 @@ input::-moz-focus-inner {
 
 input {
   line-height: normal;
-}
-
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
-
-@media print {
-  *,
-  *:before,
-  *:after {
-    background: transparent !important;
-    color: #000 !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-}
-
-@font-face {
-  font-family: 'Glyphicons Halflings';
-  src: url('../fonts/glyphicons/glyphicons-halflings-regular.eot');
-  src: url('../fonts/glyphicons/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
-       url('../fonts/glyphicons/glyphicons-halflings-regular.woff2') format('woff2'),
-       url('../fonts/glyphicons/glyphicons-halflings-regular.woff') format('woff'),
-       url('../fonts/glyphicons/glyphicons-halflings-regular.ttf') format('truetype'),
-       url('../fonts/glyphicons/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
 * {
@@ -141,6 +99,54 @@ h1 {
   padding-right: 15px;
 }
 
+.col-sm-1,
+.col-sm-2,
+.col-sm-3,
+.col-sm-6,
+.col-sm-9 {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+@media (min-width: 768px) {
+  .col-sm-1,
+  .col-sm-2,
+  .col-sm-3,
+  .col-sm-6,
+  .col-sm-9 {
+    float: left;
+  }
+
+  .col-sm-9 {
+    width: 75%;
+  }
+
+  .col-sm-6 {
+    width: 50%;
+  }
+
+  .col-sm-3 {
+    width: 25%;
+  }
+
+  .col-sm-2 {
+    width: 16.66666667%;
+  }
+
+  .col-sm-1 {
+    width: 8.33333333%;
+  }
+}
+
+label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
 .form-control {
   display: block;
   width: 100%;
@@ -179,6 +185,23 @@ h1 {
 .form-control::-ms-expand {
   border: 0;
   background-color: transparent;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-horizontal .form-group {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    text-align: right;
+    margin-bottom: 0;
+    padding-top: 11px;
+  }
 }
 
 .btn {
@@ -263,10 +286,6 @@ h1 {
   width: 100%;
 }
 
-.btn-block + .btn-block {
-  margin-top: 5px;
-}
-
 .well {
   min-height: 20px;
   padding: 19px;
@@ -279,12 +298,15 @@ h1 {
 }
 
 .container-fluid:before,
-.container-fluid:after {
+.container-fluid:after,
+.form-horizontal .form-group:before,
+.form-horizontal .form-group:after {
   content: " ";
   display: table;
 }
 
-.container-fluid:after {
+.container-fluid:after,
+.form-horizontal .form-group:after {
   clear: both;
 }
 
@@ -332,18 +354,11 @@ body {
   background-size: 100px 100px;
 }
 
-.container-fluid {
-  width: 90vw;
-  max-width: 600px;
-  margin: 20px auto;
-}
-
-.form-control {
-  margin-bottom: 10px;
-}
-
 .well {
   background-color: #EEEEEE;
   box-shadow: 0 0 30px grey;
+  width: 90vw;
+  max-width: 800px;
+  margin: 20px auto;
 }
 

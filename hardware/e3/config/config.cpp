@@ -1,4 +1,3 @@
-#include <avr/eeprom.h>
 #include "config.h"
 
 struct config_s config;
@@ -8,6 +7,8 @@ void configRead() {
 }
 
 void configWrite() {
+	Serial.println(config.clientID);
+	Serial.println(config.apiKey);
     eeprom_update_block((void*)&config, (void*)0, sizeof(config));
 }
 
@@ -18,50 +19,67 @@ void fillEEPROM() {
     }
 }
 
+int configParseIP(char *str, unsigned char *ip){
+	int res;
+	res=sscanf(str, "%u.%u.%u.%u", &(ip[0]), &(ip[1]), &(ip[2]), &(ip[3]));
+	return (res==4);
+}
+
+int configParseStrn(char *src, char* dst, int n){
+	if (strlen(src)>n)
+		return 0;
+	strcpy(dst, src);
+	return 1;
+}
+
+int configParseStrne(char *src, char *dst, int n){
+	if (strlen(src)!=n)
+		return 0;
+	strcpy(dst, src);
+	return 1;
+}
+
 int configParseRequest(char *req){
 	if (req[1]!='='){
-		configRead();
 		return 0;
 	}
 	switch (req[0]){
 		case 'i': // ip
+			return configParseIP(req+2, config.ip);
 			break;
 		case 's': // subnet
+			return configParseIP(req+2, config.subnetMask);
 			break;
 		case 'g': // gateway
+			return configParseIP(req+2, config.gateway);
 			break;
 		case 'd': // ssid name
-			if (strlen(req+2)>31)
-				return 0;
-			strcpy(req+2, config.ssidName);
+			configParseStrn(req+2, config.ssidName, 31);
 			break;
 		case 'p': // password
-			if (strlen(req+2)>63)
-				return 0;
-			strcpy(req+2, config.ssidPassword);
+			configParseStrn(req+2, config.ssidPassword, 63);
 			break;
 		case 'h':
-			if (strlen(req+2)>64)
-				return 0;
-			strcpy(req+2, config.host);
+			configParseStrn(req+2, config.host, 64);
 			break;
 		case 'o':
-			if (sscanf(req+2, "%u", &(config.port)==0))
+			if (sscanf(req+2, "%u", &(config.port))==0)
 				return 0;
 			break;
 		case 'a':
-			if (strlen(req+2)!=20)
-				return 0;
-			strcpy(req+2, config.apiKey);
+			configParseStrne(req+2, config.apiKey, 20);
 			break;
 		case 'c':
-			if (strlen(req+2)!=36)
-				return 0;
-			strcpy(req+2, config.clientID);
+			configParseStrne(req+2, config.clientID, 36);
 			break;
-		default:
-			configRead();
-			return 0;
+		case 'x':
+			unsigned char tmp;
+			if (sscanf(req+2, "%u", &tmp)==0)
+				return 0;
+			if (tmp>1)
+				return 0;
+			config.staticIP=tmp;
+			break;
 	}
 	return 1;
 }

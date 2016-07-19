@@ -1,9 +1,14 @@
 #ifndef CONFIG_H
 
     #define CONFIG_H
+    
+    #include <avr/eeprom.h>
+    #include <stdio.h>
+    #include <string.h>
+    #include <Arduino.h>
 
     struct config_s {
-        unsigned char flags;
+        unsigned char staticIP;
         unsigned char ip[4];
         unsigned char subnetMask[4];
         unsigned char gateway[4];
@@ -20,5 +25,5 @@
     void configRead();
     void configWrite();
     void fillEEPROM();
-    int configParseRequest(char *req)
+    int configParseRequest(char *req);
 #endif

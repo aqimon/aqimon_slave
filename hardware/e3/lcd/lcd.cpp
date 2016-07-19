@@ -7,7 +7,7 @@ void lcdInit() {
     lcd.backlight();
     lcd.begin(20, 4);
     lcd.clear();
-    Serial.println("[info] lcd initialized");
+    Serial.println(F("[info] lcd initialized"));
 }
 
 void lcdUpdateTempHumid(float temperature, float humidity) {
@@ -63,6 +63,15 @@ void lcdUpdateWifiStatus(unsigned char status){
             break;
         case WIFI_TIMEOUT:
             lcd.print(F("Timeout             "));
+            break;
+        case WIFI_SERVER:
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print(F("Cfg server started  "));
+            lcd.setCursor(0, 1);
+            lcd.print(F("SSID: MakerWeek     "));
+            lcd.setCursor(0, 2);
+            lcd.print(F("Cfg IP: 192.168.69.1"));
             break;
     }
 }

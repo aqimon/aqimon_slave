@@ -1,7 +1,7 @@
 #include "const.h"
 #define LED_DS 6 // data
 #define LED_STCP 7 // latch
-#define LED_SHCP 9 // clock
+#define LED_SHCP 10 // clock
 
 unsigned char ledColorLeft = LED_GREEN, ledColorRight = LED_GREEN;
 

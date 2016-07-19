@@ -1,6 +1,6 @@
 #include "wifiCore.h"
 
-SoftwareSerial wifi(WIFI_RX, WIFI_TX);
+AltSoftSerial wifi(WIFI_RX, WIFI_TX);
 char wifiBuffer[WIFI_BUFFER_SIZE], lineBuffer[LINE_BUFFER_SIZE];
 int wifiMsgLen;
 unsigned char newLine = 0;
@@ -13,10 +13,20 @@ void wifiInit() {
     delay(1000);
     digitalWrite(WIFI_RST, HIGH);
     delay(1000);
-    wifi.begin(9600); // the lowest baudrate that works, 1200 don't work. 2400 is unstable, 4800?
+    wifi.begin(38400); // the lowest baudrate that works, 1200 don't work. 2400 is unstable, 4800?
     wifiExecute(PSTR("ATE1"));
     wifiExecute(PSTR("AT+GMR"));
-    wifiExecute(PSTR("AT+CWMODE_CUR=3"));
+    wifiExecute(PSTR("AT+CWDHCP_CUR=2,1"));
+}
+
+unsigned char wifiSetStaticIP() {
+    char buf[100];
+    sprintf_P(buf, PSTR("AT+CIPSTA_CUR=\"%d.%d.%d.%d\",\"%d.%d.%d.%d\",\"%d.%d.%d.%d\"\r\n"),
+              config.ip[0], config.ip[1], config.ip[2], config.ip[3],
+              config.gateway[0], config.gateway[1], config.gateway[2], config.gateway[3],
+              config.subnetMask[0], config.subnetMask[1], config.subnetMask[2], config.subnetMask[3]);
+    wifi.write(buf);
+    return wifiWaitForResult();
 }
 
 unsigned char wifiExecute(char *command) {
@@ -25,9 +35,9 @@ unsigned char wifiExecute(char *command) {
     return wifiWaitForResult();
 }
 
-unsigned char wifiExecute(PGM_P command){
+unsigned char wifiExecute(PGM_P command) {
     char c;
-    while ((c=pgm_read_byte(command))!='\0'){
+    while ((c = pgm_read_byte(command)) != '\0') {
         wifi.write(c);
         command++;
     }
@@ -35,25 +45,25 @@ unsigned char wifiExecute(PGM_P command){
     return wifiWaitForResult();
 }
 
-unsigned char wifiWaitForResult(){
+unsigned char wifiWaitForResult() {
     memset(wifiBuffer, 0, WIFI_BUFFER_SIZE);
     wifiMsgLen = 0;
-    unsigned long t=millis();
+    unsigned long t = millis();
     while (1) {
         wifiBufferLoop();
         if (hasNewLine()) {
-            if (strcmp(useLineBuffer(), "OK\r\n")==0
-                || strcmp(useLineBuffer(), "SEND OK\r\n")==0) {
+            if (strcmp(useLineBuffer(), "OK\r") == 0
+                    || strcmp(useLineBuffer(), "SEND OK\r") == 0) {
                 Serial.println(F("end of command, ok received"));
                 return 1;
             }
-            if (strstr(useLineBuffer(), "ERROR")!=NULL) {
+            if (strcmp(useLineBuffer(), "ERROR\r") == 0) {
                 Serial.println(F("end of command, error received"));
                 lcdUpdateWifiStatus(WIFI_RESET);
                 return 0;
             }
         }
-        if (millis()-t>=TIMEOUT){
+        if (millis() - t >= TIMEOUT) {
             Serial.println(F("Timeout"));
             lcdUpdateWifiStatus(WIFI_TIMEOUT);
             return 0;
@@ -63,16 +73,23 @@ unsigned char wifiWaitForResult(){
 
 void wifiBufferLoop() {
     if (wifi.available()) {
-        if (wifiMsgLen == WIFI_BUFFER_SIZE - 2) {
+        if (wifiMsgLen == WIFI_BUFFER_SIZE - 1) {
             Serial.println(F("overflow, erasing buffer"));
-            wifiMsgLen=0;
+            wifiMsgLen = 0;
             return;
         }
         wifiBuffer[wifiMsgLen] = wifi.read();
-        if (wifiBuffer[wifiMsgLen] == '\n' || wifiBuffer[wifiMsgLen] == '>') {
-            wifiBuffer[wifiMsgLen+1] = '\0';
+        Serial.write(wifiBuffer[wifiMsgLen]);
+        if (wifiBuffer[wifiMsgLen] == '\n') {
+            wifiBuffer[wifiMsgLen] = '\0';
+            memmove(lineBuffer, wifiBuffer, wifiMsgLen + 1);
+            //Serial.println(lineBuffer);
+            newLine = 1;
+            wifiMsgLen = 0;
+        } else if (wifiBuffer[wifiMsgLen] == '>') {
+            wifiBuffer[wifiMsgLen + 1] = '\0';
             memmove(lineBuffer, wifiBuffer, wifiMsgLen + 2);
-            Serial.print(lineBuffer);
+            //Serial.println(lineBuffer);
             newLine = 1;
             wifiMsgLen = 0;
         } else {
@@ -81,8 +98,8 @@ void wifiBufferLoop() {
     }
 }
 
-char* useLineBuffer(){
-    newLine=0;
+char* useLineBuffer() {
+    newLine = 0;
     return lineBuffer;
 }
 unsigned char hasNewLine() {
@@ -98,35 +115,39 @@ void wifiLoop() {
     }
 }
 
-int wifiSendLength=0, wifiSendLinkID=0;
+int wifiSendLength = 0, wifiSendLinkID = 0;
 FILE stream;
 
-unsigned char wifiInitiateSend(char linkID){
+unsigned char wifiInitiateSend(int linkID) {
     wifi.write("AT+CIPSENDEX=");
-    if (linkID!=-1)
-        wifiSendLinkID=linkID;
+    if (linkID != -1)
+        wifiSendLinkID = linkID;
+    if (wifiSendLinkID>3 || wifiSendLinkID<0){
+        Serial.println(F("linkID corrupted, set to 0"));
+        wifiSendLinkID=0;
+    }
     wifi.print(wifiSendLinkID);
     wifi.write(",");
-    wifi.write("2048\r\n");
-    wifiSendLength=0;
+    wifi.write("256\r\n");
+    wifiSendLength = 0;
     do
         wifiBufferLoop();
-    while (strcmp(useLineBuffer(), ">")!=0);
+    while (strcmp(useLineBuffer(), ">") != 0);
     return 0;
 }
 
-int wifiStreamSend(char c, FILE *stream){
-    if (wifiSendLength%2048==0 && wifiSendLength!=0)
+int wifiStreamSend(char c, FILE *stream) {
+    if (wifiSendLength % 256 == 0 && wifiSendLength != 0)
         wifiInitiateSend(-1);
     wifi.write(c);
     wifiSendLength++;
-    if (wifiSendLength%2048==0)
+    if (wifiSendLength % 256 == 0)
         wifiWaitForResult();
     return 0;
 }
 
-unsigned char wifiEndSend(){
-    if (wifiSendLength%2048!=0){
+unsigned char wifiEndSend() {
+    if (wifiSendLength % 256 != 0) {
         wifi.write("\\0");
         wifiWaitForResult();
     }

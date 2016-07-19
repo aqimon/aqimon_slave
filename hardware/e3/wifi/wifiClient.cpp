@@ -1,5 +1,13 @@
 #include "wifiClient.h"
 
+void wifiClientInit(){
+    if (config.staticIP)
+        wifiSetStaticIP();
+    wifiExecute(PSTR("AT+CWMODE_CUR=1"));
+    wifiExecute(PSTR("AT+CIPMUX=1"));
+    wifiConnectToAP();
+}
+
 unsigned char wifiConnectToAP() {
     lcdUpdateWifiStatus(WIFI_CONNECTING_AP);
     char commandBuf[128];
@@ -16,14 +24,12 @@ unsigned char wifiSendHTTPRequest(float temperature, float humidity, float dustL
          tmp[16];
 
     dtostrf(temperature, 5, 2, tempStr);
-    dtostrf(humidity, 5, 2, humidStr);
+    dtostrf(65.0, 5, 2, humidStr);
     dtostrf(dustLevel, 4, 2, dustStr);
     dtostrf(coLevel, 4, 2, coStr);
 
-    if (!wifiExecute(PSTR("AT+CIPMUX=1")))
-        return 0;
     lcdUpdateWifiStatus(WIFI_CONNECTING_HTTP);
-    sprintf_P(sendBuffer, PSTR("AT+CIPSTART=\"TCP\",\"%s\",%d"), config.host, config.port);
+    sprintf_P(sendBuffer, PSTR("AT+CIPSTART=0,\"TCP\",\"%s\",%d"), config.host, config.port);
     if (!wifiExecute(sendBuffer))
         return 0;
 

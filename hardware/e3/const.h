@@ -15,3 +15,4 @@
 #define WIFI_SENDOK 6
 #define WIFI_RESET 7
 #define WIFI_TIMEOUT 8
+#define WIFI_SERVER 9

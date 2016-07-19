@@ -10,3 +10,6 @@
 [submodule "libraries/AltSoftSerial"]
 	path = libraries/AltSoftSerial
 	url = https://github.com/PaulStoffregen/AltSoftSerial.git
+[submodule "libraries/SoftReset"]
+	path = libraries/SoftReset
+	url = https://github.com/WickedDevice/SoftReset.git

@@ -5,7 +5,7 @@
 	#include <Arduino.h>
 	#include <DHT.h>
 
-	#define DHT_PIN 10
+	#define DHT_PIN 4
 
 	extern DHT dht;
 

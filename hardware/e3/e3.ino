@@ -8,32 +8,50 @@
 #include "wifi/wifiServer.h"
 
 float dustDensity, voltage, temperature, humidity;
+volatile int cfgMode=0;
 
 void setup() {
-    Serial.begin(9600);
-//    lcdInit();
-//    dustInit();
-//    dhtInit();
-//    ledInit();
+    Serial.begin(38400);
+    lcdInit();
+    dustInit();
+    dhtInit();
+    ledInit();
     configRead();
-//    lcdClear();
-//   lcdWrite("E3 client v0.1");
-//   dustRead(&voltage, &dustDensity);
-//    dhtRead(&temperature, &humidity);
-//    lcdUpdateTempHumid(temperature, humidity);
-//    lcdUpdateDustCo(voltage, dustDensity);
+    lcdClear();
+    lcdWrite("E3 client v0.1");
+    dustRead(&voltage, &dustDensity);
+    dhtRead(&temperature, &humidity);
+    lcdUpdateTempHumid(temperature, humidity);
+    lcdUpdateDustCo(voltage, dustDensity);
     wifiInit();
-    wifiServerInit();
-    //wifiLoop();
-    wifiServerListener();
+    wifiClientInit();
+    attachInterrupt(digitalPinToInterrupt(2), configurationMode, LOW);
+}
+
+void configurationMode(){
+    cfgMode=1;
 }
 
 void loop() {
-//    if (!wifiSendHTTPRequest(temperature, humidity, voltage, dustDensity))
-//        wifiInit();
-//    delay(5000);
-//    dustRead(&voltage, &dustDensity);
-//    dhtRead(&temperature, &humidity);
-//    lcdUpdateTempHumid(temperature, humidity);
-//    lcdUpdateDustCo(voltage, dustDensity);
+    if (!wifiSendHTTPRequest(temperature, humidity, dustDensity, voltage)){
+       wifiInit();
+       wifiClientInit();
+    }
+    if (cfgMode){
+        wifiInit();
+        wifiServerInit();
+        wifiServerListener();
+    }
+    delay(1000);
+    dustRead(&voltage, &dustDensity);
+    dhtRead(&temperature, &humidity);
+    lcdUpdateTempHumid(temperature, humidity);
+    lcdUpdateDustCo(voltage, dustDensity);
+    if (dustDensity>0.2){
+        ledSetRight(LED_RED);
+        ledSetColor();
+    } else {
+        ledSetRight(LED_GREEN);
+        ledSetColor();
+    }
 }
