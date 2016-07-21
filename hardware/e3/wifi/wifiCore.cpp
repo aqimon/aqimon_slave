@@ -2,8 +2,9 @@
 
 AltSoftSerial wifi(WIFI_RX, WIFI_TX);
 char wifiBuffer[WIFI_BUFFER_SIZE], lineBuffer[LINE_BUFFER_SIZE];
-int wifiMsgLen;
+int wifiMsgLen, wifiSendLength = 0, wifiSendLinkID = 0;
 unsigned char newLine = 0;
+FILE stream;
 
 void wifiInit() {
     fdev_setup_stream(&stream, wifiStreamSend, NULL, _FDEV_SETUP_WRITE);
@@ -13,35 +14,23 @@ void wifiInit() {
     delay(1000);
     digitalWrite(WIFI_RST, HIGH);
     delay(1000);
-    wifi.begin(38400); // the lowest baudrate that works, 1200 don't work. 2400 is unstable, 4800?
+    wifi.begin(38400); // Thanks AltSoftSerial!
     wifiExecute(PSTR("ATE1"));
     wifiExecute(PSTR("AT+GMR"));
-    wifiExecute(PSTR("AT+CWDHCP_CUR=2,1"));
+    wifiExecute(PSTR("AT+CWDHCP_DEF=2,1"));
 }
 
 unsigned char wifiSetStaticIP() {
-    char buf[100];
-    sprintf_P(buf, PSTR("AT+CIPSTA_CUR=\"%d.%d.%d.%d\",\"%d.%d.%d.%d\",\"%d.%d.%d.%d\"\r\n"),
+    fprintf_P(&stream, PSTR("AT+CIPSTA_CUR=\"%d.%d.%d.%d\",\"%d.%d.%d.%d\",\"%d.%d.%d.%d\"\r\n"),
               config.ip[0], config.ip[1], config.ip[2], config.ip[3],
               config.gateway[0], config.gateway[1], config.gateway[2], config.gateway[3],
               config.subnetMask[0], config.subnetMask[1], config.subnetMask[2], config.subnetMask[3]);
-    wifi.write(buf);
-    return wifiWaitForResult();
-}
-
-unsigned char wifiExecute(char *command) {
-    wifi.write(command);
-    wifi.write("\r\n");
     return wifiWaitForResult();
 }
 
 unsigned char wifiExecute(PGM_P command) {
-    char c;
-    while ((c = pgm_read_byte(command)) != '\0') {
-        wifi.write(c);
-        command++;
-    }
-    wifi.write("\r\n");
+    fputs_P(command, &stream);
+    fputs("\r\n", &stream);
     return wifiWaitForResult();
 }
 
@@ -50,6 +39,12 @@ unsigned char wifiWaitForResult() {
     wifiMsgLen = 0;
     unsigned long t = millis();
     while (1) {
+        if ((configEnabled==1) && (configStarted==0)) {
+            configStarted = 1;
+            wifiInit();
+            wifiServerInit();
+            wifiServerListener();
+        }
         wifiBufferLoop();
         if (hasNewLine()) {
             if (strcmp(useLineBuffer(), "OK\r") == 0
@@ -57,7 +52,8 @@ unsigned char wifiWaitForResult() {
                 Serial.println(F("end of command, ok received"));
                 return 1;
             }
-            if (strcmp(useLineBuffer(), "ERROR\r") == 0) {
+            if (strcmp(useLineBuffer(), "ERROR\r") == 0
+                    || strcmp(useLineBuffer(), "FAIL\r") == 011) {
                 Serial.println(F("end of command, error received"));
                 lcdUpdateWifiStatus(WIFI_RESET);
                 return 0;
@@ -102,6 +98,7 @@ char* useLineBuffer() {
     newLine = 0;
     return lineBuffer;
 }
+
 unsigned char hasNewLine() {
     return newLine;
 }
@@ -115,20 +112,13 @@ void wifiLoop() {
     }
 }
 
-int wifiSendLength = 0, wifiSendLinkID = 0;
-FILE stream;
-
 unsigned char wifiInitiateSend(int linkID) {
     wifi.write("AT+CIPSENDEX=");
     if (linkID != -1)
         wifiSendLinkID = linkID;
-    if (wifiSendLinkID>3 || wifiSendLinkID<0){
-        Serial.println(F("linkID corrupted, set to 0"));
-        wifiSendLinkID=0;
-    }
     wifi.print(wifiSendLinkID);
     wifi.write(",");
-    wifi.write("256\r\n");
+    wifi.write("512\r\n");
     wifiSendLength = 0;
     do
         wifiBufferLoop();
@@ -137,17 +127,17 @@ unsigned char wifiInitiateSend(int linkID) {
 }
 
 int wifiStreamSend(char c, FILE *stream) {
-    if (wifiSendLength % 256 == 0 && wifiSendLength != 0)
+    if (wifiSendLength % 512 == 0 && wifiSendLength != 0)
         wifiInitiateSend(-1);
     wifi.write(c);
     wifiSendLength++;
-    if (wifiSendLength % 256 == 0)
+    if (wifiSendLength % 512 == 0)
         wifiWaitForResult();
     return 0;
 }
 
 unsigned char wifiEndSend() {
-    if (wifiSendLength % 256 != 0) {
+    if (wifiSendLength % 512 != 0) {
         wifi.write("\\0");
         wifiWaitForResult();
     }

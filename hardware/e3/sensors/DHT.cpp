@@ -6,7 +6,7 @@ void dhtInit() {
     dht.begin();
 }
 
-void dhtRead(float* temperature, float* humidity) {
+void dhtRead(float *temperature, float *humidity) {
     *temperature = dht.readTemperature();
     *humidity = dht.readHumidity();
     if (*temperature != *temperature)

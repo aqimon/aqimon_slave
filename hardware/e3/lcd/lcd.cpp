@@ -8,6 +8,7 @@ void lcdInit() {
     lcd.begin(20, 4);
     lcd.clear();
     Serial.println(F("[info] lcd initialized"));
+    lcd.print(F("Vifo client v1"));
 }
 
 void lcdUpdateTempHumid(float temperature, float humidity) {
@@ -20,7 +21,7 @@ void lcdUpdateTempHumid(float temperature, float humidity) {
     lcd.print(F("C"));
     lcd.print(F(" Humid:"));
     lcd.print(humidStr);
-    lcd.print("%");
+    lcd.print(F("%"));
 }
 
 void lcdUpdateDustCo(float dustLevel, float coLevel) {
@@ -32,12 +33,6 @@ void lcdUpdateDustCo(float dustLevel, float coLevel) {
     lcd.print(dustLevelStr);
     lcd.print(F("  CO: "));
     lcd.print(coLevelStr);
-}
-
-void lcdWrite(char* msg) {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print(msg);
 }
 
 void lcdUpdateWifiStatus(unsigned char status){
@@ -74,8 +69,4 @@ void lcdUpdateWifiStatus(unsigned char status){
             lcd.print(F("Cfg IP: 192.168.69.1"));
             break;
     }
-}
-
-void lcdClear() {
-    lcd.clear();
 }

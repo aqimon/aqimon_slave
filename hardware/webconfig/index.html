@@ -13,29 +13,31 @@
 				<form onsubmit="return false;" class="form-horizontal" role="form">
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-10">
-				            <div class="checkbox">
-				              <label>
-				                <input type="checkbox" id="static"> <b>Use static IP</b>
-				              </label>
-				            </div>
-				          </div>
-			        </div>
-					<div class="form-group">
-						<label for="ip" class="col-sm-3 control-label">IP address</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" id="ip" placeholder="192.168.1.1">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="static"><b>Use static IP</b>
+								</label>
+							</div>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="subnet" class="col-sm-3 control-label">Subnet mask</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" id="subnet" placeholder="255.255.255.0">
+					<div id="static-ip">
+						<div class="form-group">
+							<label for="ip" class="col-sm-3 control-label">IP address</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="ip" placeholder="192.168.1.1">
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<label for="gateway" class="col-sm-3 control-label">Default gateway</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" id="gateway" placeholder="192.168.1.1">
+						<div class="form-group">
+							<label for="subnet" class="col-sm-3 control-label">Subnet mask</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="subnet" placeholder="255.255.255.0">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="gateway" class="col-sm-3 control-label">Default gateway</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="gateway" placeholder="192.168.1.1">
+							</div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -78,4 +80,4 @@
 		</div>
 		<script src="/static/index.js"></script>
 	</body>
-</html>s
+</html>

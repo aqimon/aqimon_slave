@@ -1,14 +1,14 @@
 #include "config.h"
 
 struct config_s config;
+volatile unsigned long interruptTriggerTime;
+volatile unsigned char configEnabled=0, configStarted=0, prevPinMode=1;
 
 void configRead() {
     eeprom_read_block((void*)&config, (void*)0, sizeof(config));
 }
 
 void configWrite() {
-	Serial.println(config.clientID);
-	Serial.println(config.apiKey);
     eeprom_update_block((void*)&config, (void*)0, sizeof(config));
 }
 
@@ -20,19 +20,17 @@ void fillEEPROM() {
 }
 
 int configParseIP(char *str, unsigned char *ip){
-	int res;
-	res=sscanf(str, "%u.%u.%u.%u", &(ip[0]), &(ip[1]), &(ip[2]), &(ip[3]));
-	return (res==4);
+	return (sscanf(str, "%hhu.%hhu.%hhu.%hhu", &(ip[0]), &(ip[1]), &(ip[2]), &(ip[3]))==4);
 }
 
-int configParseStrn(char *src, char* dst, int n){
+int configParseStrn(char *src, char* dst, size_t n){
 	if (strlen(src)>n)
 		return 0;
 	strcpy(dst, src);
 	return 1;
 }
 
-int configParseStrne(char *src, char *dst, int n){
+int configParseStrne(char *src, char *dst, size_t n){
 	if (strlen(src)!=n)
 		return 0;
 	strcpy(dst, src);
@@ -46,40 +44,44 @@ int configParseRequest(char *req){
 	switch (req[0]){
 		case 'i': // ip
 			return configParseIP(req+2, config.ip);
-			break;
 		case 's': // subnet
 			return configParseIP(req+2, config.subnetMask);
-			break;
 		case 'g': // gateway
 			return configParseIP(req+2, config.gateway);
-			break;
 		case 'd': // ssid name
-			configParseStrn(req+2, config.ssidName, 31);
-			break;
+			return configParseStrn(req+2, config.ssidName, 31);
 		case 'p': // password
-			configParseStrn(req+2, config.ssidPassword, 63);
-			break;
+			return configParseStrn(req+2, config.ssidPassword, 63);
 		case 'h':
-			configParseStrn(req+2, config.host, 64);
-			break;
+			return configParseStrn(req+2, config.host, 64);
 		case 'o':
 			if (sscanf(req+2, "%u", &(config.port))==0)
 				return 0;
+			return 1;
 			break;
 		case 'a':
-			configParseStrne(req+2, config.apiKey, 20);
-			break;
+			return configParseStrne(req+2, config.apiKey, 20);
 		case 'c':
-			configParseStrne(req+2, config.clientID, 36);
-			break;
+			return configParseStrne(req+2, config.clientID, 36);
 		case 'x':
-			unsigned char tmp;
-			if (sscanf(req+2, "%u", &tmp)==0)
+			if (sscanf(req+2, "%hhu", &(config.staticIP))==0)
 				return 0;
-			if (tmp>1)
+			if (config.staticIP>1)
 				return 0;
-			config.staticIP=tmp;
-			break;
+			return 1;
+		default:
+			return 0;
 	}
 	return 1;
+}
+
+void configInterrupt(){
+	if (prevPinMode==1){
+		interruptTriggerTime=millis();
+		prevPinMode=0;
+	} else { 
+		prevPinMode=1;
+		if (millis()-interruptTriggerTime>=2000)
+			configEnabled=1;
+	}
 }

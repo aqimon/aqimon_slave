@@ -8,6 +8,6 @@
 	#define DUST_DATA_PIN A3
 
 	void dustInit();
-	void dustRead(float* voltage, float* density);
+	void dustRead(float *voltage, float *density);
 
 #endif

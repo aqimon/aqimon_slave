@@ -6,7 +6,7 @@ void dustInit() {
     digitalWrite(DUST_LED_PIN, HIGH);
 }
 
-void dustRead(float* voltage, float* density) {
+void dustRead(float *voltage, float *density) {
     // https://www.sparkfun.com/datasheets/Sensors/gp2y1010au_e.pdf
     // http://www.howmuchsnow.com/arduino/airquality/
     digitalWrite(DUST_LED_PIN, LOW);

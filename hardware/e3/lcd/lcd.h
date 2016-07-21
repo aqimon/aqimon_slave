@@ -3,7 +3,6 @@
 	#include "../const.h"
 	#include <I2CIO.h>
 	#include <LiquidCrystal_I2C.h>
-	#include <LiquidCrystal_I2C_ByVac.h>
 	#include <LiquidCrystal.h>
 	#include <LCD.h>
 

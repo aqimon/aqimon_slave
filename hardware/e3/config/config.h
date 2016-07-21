@@ -21,9 +21,13 @@
     };
 
     extern struct config_s config;
+    extern volatile unsigned long interruptTriggerTime;
+    extern volatile unsigned char configEnabled, configStarted;
 
     void configRead();
     void configWrite();
     void fillEEPROM();
     int configParseRequest(char *req);
+    void configInterrupt();
+
 #endif

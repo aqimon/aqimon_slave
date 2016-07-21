@@ -3,10 +3,10 @@ function geid(id){
 }
 
 function changeIPInputState(b){
-	b=!b;
-	geid("ip").disabled=b;
-	geid("subnet").disabled=b;
-	geid("gateway").disabled=b;	
+	if (b)
+		geid("static-ip").style.display="initial";
+	else
+		geid("static-ip").style.display="none";
 }
 
 geid("static").onclick=function(){
@@ -14,6 +14,7 @@ geid("static").onclick=function(){
 }
 
 geid("save").onclick=function(){
+	geid("save").disabled=true;
 	ip=geid("ip").value;
 	subnet=geid("subnet").value;
 	gateway=geid("gateway").value;
@@ -45,6 +46,7 @@ geid("save").onclick=function(){
 	ajax.onreadystatechange=function(){
 		if (ajax.readyState == 4 && ajax.status == 200){
 			geid("save").innerHTML="Save settings";
+			geid("save").disabled=false;
 		}
 	}
 	ajax.send(data);

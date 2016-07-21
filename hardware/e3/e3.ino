@@ -8,41 +8,39 @@
 #include "wifi/wifiServer.h"
 
 float dustDensity, voltage, temperature, humidity;
-volatile int cfgMode=0;
+long t;
 
 void setup() {
     Serial.begin(38400);
+    attachInterrupt(digitalPinToInterrupt(2), configInterrupt, CHANGE);
     lcdInit();
     dustInit();
     dhtInit();
     ledInit();
     configRead();
-    lcdClear();
-    lcdWrite("E3 client v0.1");
     dustRead(&voltage, &dustDensity);
     dhtRead(&temperature, &humidity);
     lcdUpdateTempHumid(temperature, humidity);
     lcdUpdateDustCo(voltage, dustDensity);
     wifiInit();
     wifiClientInit();
-    attachInterrupt(digitalPinToInterrupt(2), configurationMode, LOW);
 }
 
-void configurationMode(){
-    cfgMode=1;
-}
 
 void loop() {
     if (!wifiSendHTTPRequest(temperature, humidity, dustDensity, voltage)){
        wifiInit();
        wifiClientInit();
     }
-    if (cfgMode){
-        wifiInit();
-        wifiServerInit();
-        wifiServerListener();
+    t=millis();
+    while (millis()-t<=5000){
+        if (configEnabled==1){
+            configStarted=1;
+            wifiInit();
+            wifiServerInit();
+            wifiServerListener();
+        }
     }
-    delay(1000);
     dustRead(&voltage, &dustDensity);
     dhtRead(&temperature, &humidity);
     lcdUpdateTempHumid(temperature, humidity);
