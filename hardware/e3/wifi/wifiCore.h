@@ -19,10 +19,12 @@
 	
 	extern AltSoftSerial wifi;
 	extern FILE stream;
+	extern FILE commandStream;
 
 	void wifiInit();
 	void wifiLoop();
 	void wifiBufferLoop();
+	unsigned char wifiReset();
 	
 	unsigned char wifiConnectToAP();
 	unsigned char wifiExecute(char *command);
@@ -32,6 +34,7 @@
 	unsigned char wifiSetStaticIP();
 	
 	int wifiStreamSend(char c, FILE *stream);
+	int wifiStreamSendCommand(char c, FILE *stream);
 	unsigned char wifiInitiateSend(int linkID);
 	unsigned char wifiEndSend();
 

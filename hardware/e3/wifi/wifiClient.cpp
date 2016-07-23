@@ -10,7 +10,7 @@ void wifiClientInit() {
 
 unsigned char wifiConnectToAP() {
     lcdUpdateWifiStatus(WIFI_CONNECTING_AP);
-    fprintf_P(&stream, PSTR("AT+CWJAP_CUR=\"%s\",\"%s\"\r\n"), config.ssidName, config.ssidPassword);
+    fprintf_P(&commandStream, PSTR("AT+CWJAP_CUR=\"%s\",\"%s\"\r\n"), config.ssidName, config.ssidPassword);
     return wifiWaitForResult();
 }
 
@@ -29,7 +29,7 @@ unsigned char wifiSendHTTPRequest(float temperature, float humidity, float dustL
         humidStr[0] = '0';
     
     lcdUpdateWifiStatus(WIFI_CONNECTING_HTTP);
-    fprintf_P(&stream, PSTR("AT+CIPSTART=0,\"TCP\",\"%s\",%d\r\n"), config.host, config.port);
+    fprintf_P(&commandStream, PSTR("AT+CIPSTART=0,\"TCP\",\"%s\",%d\r\n"), config.host, config.port);
     if (!wifiWaitForResult())
         return 0;
 

@@ -444,3 +444,7 @@ body {
   margin: 20px auto;
 }
 
+#static-ip {
+  display: none;
+}
+

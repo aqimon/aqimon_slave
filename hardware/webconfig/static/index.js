@@ -52,6 +52,7 @@ geid("save").onclick=function(){
 	ajax.send(data);
 	geid("save").innerHTML="Saving";
 }
+
 function loadData(){
 	ajax=new XMLHttpRequest();
 	ajax.responseType="json";
@@ -78,4 +79,5 @@ function loadData(){
 	}
 	ajax.send();
 }
-setTimeout(loadData, 50);
+
+setTimeout(loadData, 10);

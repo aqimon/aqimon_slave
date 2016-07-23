@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-        <title>Device configuration</title>
-        <style>
-        html {
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <title>Device configuration</title>
+    <style>
+html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -450,162 +450,168 @@ body {
   margin: 20px auto;
 }
 
+#static-ip {
+  display: none;
+}
 </style>
-    </head>
-    <body>
-        <div class="container-fluid">
-            <div class="well">
-                <h1>Device configuration</h1>
-                <br />
-                <form onsubmit="return false;" class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="static"><b>Use static IP</b>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="static-ip">
-                        <div class="form-group">
-                            <label for="ip" class="col-sm-3 control-label">IP address</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="ip" placeholder="192.168.1.1">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="subnet" class="col-sm-3 control-label">Subnet mask</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="subnet" placeholder="255.255.255.0">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="gateway" class="col-sm-3 control-label">Default gateway</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="gateway" placeholder="192.168.1.1">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ssid" class="col-sm-3 control-label">SSID</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="ssid">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ssidpassword" class="col-sm-3 control-label">SSID password</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" id="password">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="host" class="col-sm-3 control-label">Host</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="host">
-                        </div>
-                        <label for="port" class="col-sm-1 control-label">Port</label>
-                        <div class="col-sm-2">
-                            <input type="number" class="form-control" id="port" value="80">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="clientid" class="col-sm-3 control-label">Client ID</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="clientid">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="apikey" class="col-sm-3 control-label">API key</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apikey">
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-large btn-block btn-primary" id="save">Save settings</button>
-                </form>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="well">
+        <h1>Device configuration</h1>
+        <br />
+        <form onsubmit="return false;" class="form-horizontal" role="form">
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="static"><b>Use static IP</b>
+                </label>
+              </div>
             </div>
-        </div>
-        <script>
-        function geid(id){
-    return document.getElementById(id);
+          </div>
+          <div id="static-ip">
+            <div class="form-group">
+              <label for="ip" class="col-sm-3 control-label">IP address</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="ip" placeholder="192.168.1.1">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="subnet" class="col-sm-3 control-label">Subnet mask</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="subnet" placeholder="255.255.255.0">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="gateway" class="col-sm-3 control-label">Default gateway</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="gateway" placeholder="192.168.1.1">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ssid" class="col-sm-3 control-label">SSID</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="ssid">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ssidpassword" class="col-sm-3 control-label">SSID password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control" id="password">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="host" class="col-sm-3 control-label">Host</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="host">
+            </div>
+            <label for="port" class="col-sm-1 control-label">Port</label>
+            <div class="col-sm-2">
+              <input type="number" class="form-control" id="port" value="80">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="clientid" class="col-sm-3 control-label">Client ID</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="clientid">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="apikey" class="col-sm-3 control-label">API key</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="apikey">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-large btn-block btn-primary" id="save">Save settings</button>
+        </form>
+      </div>
+    </div>
+    <script>
+    function geid(id){
+  return document.getElementById(id);
 }
 
 function changeIPInputState(b){
-    if (b)
-        geid("static-ip").style.display="initial";
-    else
-        geid("static-ip").style.display="none";
+  if (b)
+    geid("static-ip").style.display="initial";
+  else
+    geid("static-ip").style.display="none";
 }
 
 geid("static").onclick=function(){
-    changeIPInputState(geid("static").checked); 
+  changeIPInputState(geid("static").checked); 
 }
 
 geid("save").onclick=function(){
-    geid("save").disabled=true;
-    ip=geid("ip").value;
-    subnet=geid("subnet").value;
-    gateway=geid("gateway").value;
-    ssidname=geid("ssid").value;
-    ssidPassword=geid("password").value;
-    host=geid("host").value;
-    port=geid("port").value;
-    clientid=geid("clientid").value;
-    apikey=geid("apikey").value;
-    if (geid("static").checked)
-        static=1;
-    else
-        static=0;
+  geid("save").disabled=true;
+  ip=geid("ip").value;
+  subnet=geid("subnet").value;
+  gateway=geid("gateway").value;
+  ssidname=geid("ssid").value;
+  ssidPassword=geid("password").value;
+  host=geid("host").value;
+  port=geid("port").value;
+  clientid=geid("clientid").value;
+  apikey=geid("apikey").value;
+  if (geid("static").checked)
+    static=1;
+  else
+    static=0;
 
-    data = "\nbegin\ni="+ip
-            +"\ns="+subnet
-            +"\ng="+gateway
-            +"\nd="+ssidname
-            +"\np="+ssidPassword
-            +"\nh="+host
-            +"\no="+port
-            +"\nc="+clientid
-            +"\na="+apikey
-            +"\nx="+static
-            +"\nend\n";
-            console.log(data);
-    ajax=new XMLHttpRequest();
-    ajax.open("POST", "/save");
-    ajax.onreadystatechange=function(){
-        if (ajax.readyState == 4 && ajax.status == 200){
-            geid("save").innerHTML="Save settings";
-            geid("save").disabled=false;
-        }
+  data = "\nbegin\ni="+ip
+      +"\ns="+subnet
+      +"\ng="+gateway
+      +"\nd="+ssidname
+      +"\np="+ssidPassword
+      +"\nh="+host
+      +"\no="+port
+      +"\nc="+clientid
+      +"\na="+apikey
+      +"\nx="+static
+      +"\nend\n";
+      console.log(data);
+  ajax=new XMLHttpRequest();
+  ajax.open("POST", "/save");
+  ajax.onreadystatechange=function(){
+    if (ajax.readyState == 4 && ajax.status == 200){
+      geid("save").innerHTML="Save settings";
+      geid("save").disabled=false;
     }
-    ajax.send(data);
-    geid("save").innerHTML="Saving";
+  }
+  ajax.send(data);
+  geid("save").innerHTML="Saving";
 }
+
 function loadData(){
-    ajax=new XMLHttpRequest();
-    ajax.responseType="json";
-    ajax.open("GET", "/currSetting");
-    ajax.onreadystatechange=function(){
-        if (ajax.readyState == 4 && ajax.status==200){
-            data=ajax.response;
-            geid("ip").value=data.ip;
-            geid("subnet").value=data.subnet;
-            geid("gateway").value=data.gateway;
-            geid("ssid").value=data.ssid;
-            geid("password").value=data.password;
-            geid("host").value=data.host;
-            geid("port").value=data.port;
-            geid("clientid").value=data.clientID;
-            geid("apikey").value=data.apiKey;
-            if (data.static==1){
-                geid("static").checked=true;
-            } else {
-                geid("static").checked=false;
-            }
-            changeIPInputState(geid("static").checked);
-          }
-    }
-    ajax.send();
+  ajax=new XMLHttpRequest();
+  ajax.responseType="json";
+  ajax.open("GET", "/currSetting");
+  ajax.onreadystatechange=function(){
+      if (ajax.readyState == 4 && ajax.status==200){
+        data=ajax.response;
+        geid("ip").value=data.ip;
+        geid("subnet").value=data.subnet;
+        geid("gateway").value=data.gateway;
+        geid("ssid").value=data.ssid;
+        geid("password").value=data.password;
+        geid("host").value=data.host;
+        geid("port").value=data.port;
+        geid("clientid").value=data.clientID;
+        geid("apikey").value=data.apiKey;
+        if (data.static==1){
+          geid("static").checked=true;
+        } else {
+          geid("static").checked=false;
+        }
+        changeIPInputState(geid("static").checked);
+      }
+  }
+  ajax.send();
 }
-setTimeout(loadData, 50);</script>
-    </body>
+
+setTimeout(loadData, 10);
+</script>
+  </body>
 </html>

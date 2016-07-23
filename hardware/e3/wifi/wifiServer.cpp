@@ -6,7 +6,6 @@ char httpMethod[8], httpPath[16], httpVer[9];
 void wifiServerInit() {
 	wifiExecute(PSTR("AT+CWMODE_CUR=2"));
 	wifiExecute(PSTR("AT+CWSAP_DEF=\"MakerWeek\",\"\",5,0,2,0"));
-	wifiExecute(PSTR("AT+CWDHCP_CUR=0,1"));
 	wifiExecute(PSTR("AT+CIPAP_DEF=\"192.168.69.1\",\"192.168.69.0\",\"255.255.255.0\""));
 	wifiExecute(PSTR("AT+CIPMUX=1"));
 	wifiExecute(PSTR("AT+CIPSERVER=1,80"));
@@ -14,20 +13,17 @@ void wifiServerInit() {
 }
 
 void wifiServerListener() {
-	int res;
 	while (1) {
 		wifiBufferLoop();
 		if (hasNewLine()) {
-			if (strstr(useLineBuffer(), "+IPD") != NULL) {
+			if (strstr_P(useLineBuffer(), PSTR("+IPD")) != NULL) {
 				// now we parse the request
 				Serial.println(F("Get something, parsing to see if it's http or not"));
-				res=sscanf(useLineBuffer(), "+IPD,%d,%*d:%7s %15s %8s\r",
+				if (sscanf_P(useLineBuffer(), PSTR("+IPD,%d,%*d:%7s %15s %8s\r"),
 				             &linkID,
 				             httpMethod,
 				             httpPath,
-				             httpVer);
-				Serial.println(res);
-				if (res!=4){
+				             httpVer)!=4){
 					Serial.println(httpMethod);
 					Serial.println(httpPath);
 					Serial.println(httpVer);
@@ -38,7 +34,7 @@ void wifiServerListener() {
 				}
 				if ((!strcmp_P(httpVer, PSTR("HTTP/1.1"))) || (!strcmp_P(httpVer, PSTR("HTTP/1.0")))) {
 					Serial.println(F("It's really a HTTP request"));
-					while (strcmp(useLineBuffer(), "\r") != 0)
+					while (strcmp_P(useLineBuffer(), PSTR("\r")) != 0)
 						wifiBufferLoop();
 					if (strcmp_P(httpPath, PSTR("/")) == 0) {
 						Serial.println(F("Sending index page"));
@@ -64,6 +60,10 @@ void wifiServerListener() {
 					wifiServerSendPGMP(http400, &stream);
 					wifiEndSend();
 				}
+			} else if (strcmp_P(useLineBuffer(), PSTR("ready\r"))==0){
+				Serial.println(F("ESP unexpectedly reseted, initializing"));
+				wifiInit();
+				wifiServerInit();
 			}
 		}
 	}
