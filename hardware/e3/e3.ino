@@ -3,12 +3,13 @@
 #include "sensors/dust.h"
 #include "config/config.h"
 #include "lcd/lcd.h"
+#include "notification/led.h"
 #include "wifi/wifiCore.h"
 #include "wifi/wifiClient.h"
 #include "wifi/wifiServer.h"
 
-float dustDensity, voltage, temperature, humidity;
-long t;
+float temperature, humidity, dustDensity, coLevel, voltage;
+unsigned long t;
 
 void setup() {
     Serial.begin(38400);

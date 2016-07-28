@@ -5,8 +5,9 @@ char httpMethod[8], httpPath[16], httpVer[9];
 
 void wifiServerInit() {
 	wifiExecute(PSTR("AT+CWMODE_CUR=2"));
-	wifiExecute(PSTR("AT+CWSAP_DEF=\"MakerWeek\",\"\",5,0,2,0"));
+	wifiExecute(PSTR("AT+CWSAP_DEF=\"MakerWeek\",\"makerweek\",5,4,2,0"));
 	wifiExecute(PSTR("AT+CIPAP_DEF=\"192.168.69.1\",\"192.168.69.0\",\"255.255.255.0\""));
+	wifiExecute(PSTR("AT+CWDHCP_DEF=1,1"));
 	wifiExecute(PSTR("AT+CIPMUX=1"));
 	wifiExecute(PSTR("AT+CIPSERVER=1,80"));
 	lcdUpdateWifiStatus(WIFI_SERVER);

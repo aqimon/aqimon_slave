@@ -64,8 +64,10 @@ void lcdUpdateWifiStatus(unsigned char status){
             lcd.setCursor(0, 0);
             lcd.print(F("Cfg server started  "));
             lcd.setCursor(0, 1);
-            lcd.print(F("SSID: MakerWeek     "));
+            lcd.print(F("SSID    : MakerWeek "));
             lcd.setCursor(0, 2);
+            lcd.print(F("Password: makerweek "));
+            lcd.setCursor(0, 3);
             lcd.print(F("Cfg IP: 192.168.69.1"));
             break;
     }

@@ -14,8 +14,6 @@ void wifiInit() {
     while (!wifiReset())
         Serial.println(F("Cannot hard reset, retrying"));
     wifiExecute(PSTR("AT+GMR"));
-    wifiExecute(PSTR("AT+CWDHCP_DEF=0,1"));
-    wifiExecute(PSTR("AT+CWDHCP_DEF=1,1"));
 }
 
 unsigned char wifiReset() {
