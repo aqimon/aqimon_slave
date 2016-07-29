@@ -4,6 +4,7 @@
 
 	#include <Arduino.h>
 	#include <DHT.h>
+	#include <avr/wdt.h>
 
 	#define DHT_PIN 5
 

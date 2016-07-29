@@ -135,8 +135,7 @@ unsigned char wifiInitiateSend(int linkID) {
     if (linkID != -1)
         wifiSendLinkID = linkID;
     wifi.print(wifiSendLinkID);
-    wifi.write(",");
-    wifi.write("512\r\n");
+    wifi.write(",256\r\n");
     wifiSendLength = 0;
     do
         wifiBufferLoop();
@@ -145,11 +144,11 @@ unsigned char wifiInitiateSend(int linkID) {
 }
 
 int wifiStreamSend(char c, FILE *stream) {
-    if (wifiSendLength % 512 == 0 && wifiSendLength != 0)
+    if (wifiSendLength % 256 == 0 && wifiSendLength != 0)
         wifiInitiateSend(-1);
     wifi.write(c);
     wifiSendLength++;
-    if (wifiSendLength % 512 == 0)
+    if (wifiSendLength % 256 == 0)
         wifiWaitForResult();
     return 0;
 }
@@ -160,7 +159,7 @@ int wifiStreamSendCommand(char c, FILE *stream) {
 }
 
 unsigned char wifiEndSend() {
-    if (wifiSendLength % 512 != 0) {
+    if (wifiSendLength % 256 != 0) {
         wifi.write("\\0");
         wifiWaitForResult();
     }
