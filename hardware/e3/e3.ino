@@ -9,7 +9,7 @@
 #include "wifi/wifiServer.h"
 #include <avr/wdt.h>
 
-void __attribute__((naked)) __attribute__((section(".init3"))) bwdt_init(void) {
+void __attribute__((naked)) __attribute__((section(".init3"))) wdt_init(void) {
     MCUSR = 0;
     wdt_disable();
 }
@@ -42,7 +42,7 @@ void loop() {
     lcdUpdateWifiStatus(WIFI_IDLE);
     while (millis()-t<=60L*1000L){
         wdt_reset();
-        if (configEnabled==1){
+        if (configEnabled){
             configStarted=1;
             wifiInit();
             wifiServerInit();

@@ -78,7 +78,7 @@ int configParseRequest(char *req){
 }
 
 void configInterrupt(){
-	if (prevPinMode==1){
+	if (prevPinMode){
 		interruptTriggerTime=millis();
 		prevPinMode=0;
 	} else { 

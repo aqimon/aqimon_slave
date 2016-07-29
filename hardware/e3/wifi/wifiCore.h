@@ -14,8 +14,8 @@
 	#define WIFI_TX 9
 	#define WIFI_RX 8
 	#define WIFI_RST 11
-	#define LINE_BUFFER_SIZE 128
-	#define WIFI_BUFFER_SIZE 128
+	#define LINE_BUFFER_SIZE 192
+	#define WIFI_BUFFER_SIZE 192
 	#define TIMEOUT 20000
 	
 	extern AltSoftSerial wifi;

@@ -56,7 +56,7 @@ void wifiServerListener() {
 						wifiServerSendPGMP(http200json, &stream);
 						wifiServerSendPGMP(success, &stream);
 						wifiEndSend();
-						while (1); // just let the watchdog trigger itself
+						while (1); // just let the watchdog timeout
 					} else {
 						Serial.println(F("Sending 404"));
 						wifiInitiateSend(linkID);

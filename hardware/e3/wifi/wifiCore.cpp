@@ -60,13 +60,14 @@ unsigned char wifiWaitForResult() {
         }
         wifiBufferLoop();
         if (hasNewLine()) {
-            if (strcmp(useLineBuffer(), "OK\r") == 0
-                    || strcmp(useLineBuffer(), "SEND OK\r") == 0) {
+            if (strcmp_P(useLineBuffer(), PSTR("OK\r")) == 0
+                    || strcmp_P(useLineBuffer(), PSTR("SEND OK\r")) == 0) {
                 Serial.println(F("end of command, ok received"));
                 return 1;
             }
-            if (strcmp(useLineBuffer(), "ERROR\r") == 0
-                    || strcmp(useLineBuffer(), "FAIL\r") == 0) {
+            if (strcmp_P(useLineBuffer(), PSTR("ERROR\r")) == 0
+                    || strcmp_P(useLineBuffer(), PSTR("FAIL\r")) == 0
+                    || strcmp_P(useLineBuffer(), PSTR("ready\r")) == 0) {
                 Serial.println(F("end of command, error received"));
                 lcdUpdateWifiStatus(WIFI_RESET);
                 return 0;
@@ -84,7 +85,7 @@ void wifiBufferLoop() {
     wdt_reset();
     if (wifi.available()) {
         if (wifiMsgLen == WIFI_BUFFER_SIZE - 1) {
-            Serial.println(F("overflow, erasing buffer"));
+            Serial.println(F("buffer overflow, move pointer to beginning"));
             wifiMsgLen = 0;
             return;
         }
@@ -131,11 +132,9 @@ unsigned char wifiDeepSleep(unsigned long duration){
 }
 
 unsigned char wifiInitiateSend(int linkID) {
-    wifi.write("AT+CIPSENDEX=");
     if (linkID != -1)
         wifiSendLinkID = linkID;
-    wifi.print(wifiSendLinkID);
-    wifi.write(",256\r\n");
+    fprintf_P(&commandStream, PSTR("AT+CIPSENDEX=%d,256\r\n"), wifiSendLinkID);
     wifiSendLength = 0;
     do
         wifiBufferLoop();
@@ -163,8 +162,6 @@ unsigned char wifiEndSend() {
         wifi.write("\\0");
         wifiWaitForResult();
     }
-    wifi.write("AT+CIPCLOSE=");
-    wifi.print(wifiSendLinkID);
-    wifi.write("\r\n");
+    fprintf_P(&commandStream, PSTR("AT+CIPCLOSE=%d\r\n"), wifiSendLinkID);
     return wifiWaitForResult();
 }
