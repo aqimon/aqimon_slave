@@ -13,6 +13,24 @@ geid("static").onclick=function(){
 	changeIPInputState(geid("static").checked);	
 }
 
+geid("restart").onclick=function(){
+	ajax=new XMLHttpRequest();
+	ajax.open("GET", "/restart");
+	ajax.onreadystatechange=function(){
+		if (ajax.readyState == 4 && ajax.status == 200){
+			setTimeout(function(){
+				geid("restart").disabled=false;
+				geid("save").disabled=false;
+				geid("restart").innerHTML="Restart";
+			}, 10000);
+		}
+	}
+	ajax.send(data);
+	geid("restart").disabled=true;
+	geid("save").disabled=true;
+	geid("restart").innerHTML="Restarting (wait for 10s)";
+}
+
 geid("save").onclick=function(){
 	geid("save").disabled=true;
 	ip=geid("ip").value;

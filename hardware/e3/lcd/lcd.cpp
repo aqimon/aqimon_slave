@@ -8,7 +8,7 @@ void lcdInit() {
     lcd.begin(20, 4);
     lcd.clear();
     Serial.println(F("[info] lcd initialized"));
-    lcd.print(F("Vifo client v1"));
+    lcd.print(F("E3 client v1"));
 }
 
 void lcdUpdateTempHumid(float temperature, float humidity) {
@@ -69,6 +69,9 @@ void lcdUpdateWifiStatus(unsigned char status){
             lcd.print(F("Password: makerweek "));
             lcd.setCursor(0, 3);
             lcd.print(F("Cfg IP: 192.168.69.1"));
+            break;
+        case WIFI_IDLE:
+            lcd.print(F("Idle                "));
             break;
     }
 }

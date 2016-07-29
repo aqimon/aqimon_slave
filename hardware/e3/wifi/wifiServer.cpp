@@ -50,6 +50,13 @@ void wifiServerListener() {
 						wifiServerSendPGMP(http200json, &stream);
 						wifiServerSendConfig(&stream);
 						wifiEndSend();
+					} else if (strcmp_P(httpPath, PSTR("/restart"))==0){
+						Serial.println(F("Soft restarting"));
+						wifiInitiateSend(linkID);
+						wifiServerSendPGMP(http200json, &stream);
+						wifiServerSendPGMP(success, &stream);
+						wifiEndSend();
+						while (1); // just let the watchdog trigger itself
 					} else {
 						Serial.println(F("Sending 404"));
 						wifiInitiateSend(linkID);

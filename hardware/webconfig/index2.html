@@ -63,7 +63,6 @@ input[type="checkbox"] {
   box-sizing: border-box;
   padding: 0;
 }
-
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -374,6 +373,10 @@ input[type="checkbox"]:focus {
   width: 100%;
 }
 
+.btn-block + .btn-block {
+  margin-top: 5px;
+}
+
 .well {
   min-height: 20px;
   padding: 19px;
@@ -525,11 +528,12 @@ body {
             </div>
           </div>
           <button type="submit" class="btn btn-large btn-block btn-primary" id="save">Save settings</button>
+          <button class="btn btn-large btn-block btn-primary" id="restart">Restart device</button>
         </form>
       </div>
     </div>
     <script>
-    function geid(id){
+function geid(id){
   return document.getElementById(id);
 }
 
@@ -542,6 +546,24 @@ function changeIPInputState(b){
 
 geid("static").onclick=function(){
   changeIPInputState(geid("static").checked); 
+}
+
+geid("restart").onclick=function(){
+  ajax=new XMLHttpRequest();
+  ajax.open("GET", "/restart");
+  ajax.onreadystatechange=function(){
+    if (ajax.readyState == 4 && ajax.status == 200){
+      setTimeout(function(){
+        geid("restart").disabled=false;
+        geid("save").disabled=false;
+        geid("restart").innerHTML="Restart";
+      }, 10000);
+    }
+  }
+  ajax.send(data);
+  geid("restart").disabled=true;
+  geid("save").disabled=true;
+  geid("restart").innerHTML="Restarting (wait for 10s)";
 }
 
 geid("save").onclick=function(){

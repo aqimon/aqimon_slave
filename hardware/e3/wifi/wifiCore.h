@@ -5,6 +5,7 @@
 	#include <AltSoftSerial.h>
 	#include <avr/pgmspace.h>
 	#include <Arduino.h>
+	#include <avr/wdt.h>
 	#include "wifiServer.h"
 	#include "../const.h"
 	#include "../config/config.h"
@@ -32,7 +33,8 @@
 	unsigned char wifiWaitForResult();
 	unsigned char hasNewLine();
 	unsigned char wifiSetStaticIP();
-	
+	unsigned char wifiDeepSleep(unsigned long duration);
+
 	int wifiStreamSend(char c, FILE *stream);
 	int wifiStreamSendCommand(char c, FILE *stream);
 	unsigned char wifiInitiateSend(int linkID);

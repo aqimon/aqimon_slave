@@ -16,3 +16,4 @@
 #define WIFI_RESET 7
 #define WIFI_TIMEOUT 8
 #define WIFI_SERVER 9
+#define WIFI_IDLE 10

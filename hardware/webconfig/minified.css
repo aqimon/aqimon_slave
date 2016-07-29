@@ -57,7 +57,6 @@ input[type="checkbox"] {
   box-sizing: border-box;
   padding: 0;
 }
-
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -366,6 +365,10 @@ input[type="checkbox"]:focus {
 .btn-block {
   display: block;
   width: 100%;
+}
+
+.btn-block + .btn-block {
+  margin-top: 5px;
 }
 
 .well {

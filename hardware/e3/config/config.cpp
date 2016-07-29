@@ -14,9 +14,11 @@ void configWrite() {
 
 void fillEEPROM() {
     int i;
-    for (i = 0; i < 1024; i++) {
+    for (i = 0; i < 1024; i++)
         eeprom_write_byte((uint8_t*)i, 0);
-    }
+    configRead();
+    config.port=80;
+    configWrite();
 }
 
 int configParseIP(char *str, unsigned char *ip){

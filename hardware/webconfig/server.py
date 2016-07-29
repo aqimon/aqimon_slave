@@ -15,6 +15,10 @@ def index2():
 def index3():
     return render_template("index3.html")
 
+@app.route("/restart")
+def restart():
+    return json.jsonify(result="success")
+
 @app.route("/save", methods=["POST"])
 def saveSetting():
     time.sleep(1)

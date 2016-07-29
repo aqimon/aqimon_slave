@@ -13,7 +13,9 @@ void wifiInit() {
     wifi.begin(38400); // Thanks AltSoftSerial!
     while (!wifiReset())
         Serial.println(F("Cannot hard reset, retrying"));
+    wifiExecute(PSTR("AT"));
     wifiExecute(PSTR("AT+GMR"));
+    wifiExecute(PSTR("AT+RFVDD"));
 }
 
 unsigned char wifiReset() {
@@ -79,6 +81,7 @@ unsigned char wifiWaitForResult() {
 }
 
 void wifiBufferLoop() {
+    wdt_reset();
     if (wifi.available()) {
         if (wifiMsgLen == WIFI_BUFFER_SIZE - 1) {
             Serial.println(F("overflow, erasing buffer"));
@@ -90,13 +93,11 @@ void wifiBufferLoop() {
         if (wifiBuffer[wifiMsgLen] == '\n') {
             wifiBuffer[wifiMsgLen] = '\0';
             memmove(lineBuffer, wifiBuffer, wifiMsgLen + 1);
-            //Serial.println(lineBuffer);
             newLine = 1;
             wifiMsgLen = 0;
         } else if (wifiBuffer[wifiMsgLen] == '>') {
             wifiBuffer[wifiMsgLen + 1] = '\0';
             memmove(lineBuffer, wifiBuffer, wifiMsgLen + 2);
-            //Serial.println(lineBuffer);
             newLine = 1;
             wifiMsgLen = 0;
         } else {
@@ -116,6 +117,7 @@ unsigned char hasNewLine() {
 
 void wifiLoop() {
     while (1) {
+        wdt_reset();
         if (wifi.available())
             Serial.write(wifi.read());
         if (Serial.available())
@@ -123,6 +125,10 @@ void wifiLoop() {
     }
 }
 
+unsigned char wifiDeepSleep(unsigned long duration){
+    fprintf_P(&commandStream, PSTR("AT+GSLP=%lu\r\n"), duration);
+    return wifiWaitForResult();
+}
 
 unsigned char wifiInitiateSend(int linkID) {
     wifi.write("AT+CIPSENDEX=");
