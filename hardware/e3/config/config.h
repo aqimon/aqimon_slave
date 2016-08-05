@@ -18,6 +18,7 @@
         uint16_t port;
         char apiKey[21];
         char clientID[37];
+        unsigned long sleepTime;
     };
 
     extern struct config_s config;

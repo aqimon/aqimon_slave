@@ -129,7 +129,8 @@ void wifiServerSendConfig(FILE *stream) {
 	               "\"port\": %d,"
 	               "\"apiKey\": \"%s\","
 	               "\"clientID\": \"%s\","
-	               "\"static\": %d"
+	               "\"static\": %d,"
+	               "\"sleeptime\": %lu"
 	               "}"),
 	          config.ip[0], config.ip[1], config.ip[2], config.ip[3],
 	          config.subnetMask[0], config.subnetMask[1], config.subnetMask[2], config.subnetMask[3],
@@ -140,5 +141,6 @@ void wifiServerSendConfig(FILE *stream) {
 	          config.port,
 	          config.apiKey,
 	          config.clientID,
-	          config.staticIP);
+	          config.staticIP,
+	          config.sleepTime);
 }

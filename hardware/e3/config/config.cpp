@@ -18,6 +18,7 @@ void fillEEPROM() {
         eeprom_write_byte((uint8_t*)i, 0);
     configRead();
     config.port=80;
+    config.sleepTime=600;
     configWrite();
 }
 
@@ -71,6 +72,12 @@ int configParseRequest(char *req){
 			if (config.staticIP>1)
 				return 0;
 			return 1;
+			break;
+		case 't':
+			if (sscanf(req+2, "%lu", &(config.sleepTime))==0)
+				return 0;
+			return 1;
+			break;
 		default:
 			return 0;
 	}

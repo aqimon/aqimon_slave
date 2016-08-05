@@ -42,6 +42,7 @@ geid("save").onclick=function(){
 	port=geid("port").value;
 	clientid=geid("clientid").value;
 	apikey=geid("apikey").value;
+	sleeptime=geid("sleeptime").value;
 	if (geid("static").checked)
 		static=1;
 	else
@@ -57,6 +58,7 @@ geid("save").onclick=function(){
 			+"\nc="+clientid
 			+"\na="+apikey
 			+"\nx="+static
+			+"\nt="+sleeptime
 			+"\nend\n";
 			console.log(data);
 	ajax=new XMLHttpRequest();
@@ -87,6 +89,7 @@ function loadData(){
 		    geid("port").value=data.port;
 		    geid("clientid").value=data.clientID;
 		    geid("apikey").value=data.apiKey;
+		    geid("sleeptime").value=data.sleeptime;
 		    if (data.static==1){
 		    	geid("static").checked=true;
 		    } else {

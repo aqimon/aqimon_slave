@@ -28,6 +28,6 @@ def saveSetting():
 def setting():
     return json.jsonify(ip="111.111.111.111", subnet="111.111.111.111", gateway="111.111.111.111",
                         ssid="111.111.111.111", password="xxxxxxxxxxx", host="e3.xxxx",
-                        port=80, clientID="xxxxxxxxxxxxxxxxxxx", apiKey="xxxxxxxxxxxxx", static=1)
+                        port=80, clientID="xxxxxxxxxxxxxxxxxxx", apiKey="xxxxxxxxxxxxx", static=1, sleeptime="6666")
 
 app.run(debug=True)

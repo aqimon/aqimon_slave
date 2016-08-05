@@ -3,7 +3,7 @@
 void wifiClientInit() {
     if (config.staticIP)
         wifiSetStaticIP();
-    wifiExecute(PSTR("AT+CWMODE_CUR=1"));
+    wifiExecute(PSTR("AT+CWMODE_DEF=1"));
     wifiExecute(PSTR("AT+CWDHCP_DEF=0,1"));
     wifiExecute(PSTR("AT+CIPMUX=1"));
     wifiConnectToAP();

@@ -14,13 +14,13 @@ void __attribute__((naked)) __attribute__((section(".init3"))) wdt_init(void) {
     wdt_disable();
 }
 
-float temperature, humidity, dustDensity, coLevel, voltage;
+float temperature, humidity, dustDensity, coLevel, voltage, coDensity;
 unsigned long t;
 
 void setup() {
     wdt_enable(WDTO_2S);
     Serial.begin(38400);
-    //attachInterrupt(digitalPinToInterrupt(2), configInterrupt, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(2), configInterrupt, CHANGE);
     lcdInit();
     dustInit();
     dhtInit();
@@ -29,35 +29,51 @@ void setup() {
     dustRead(&voltage, &dustDensity);
     dhtRead(&temperature, &humidity);
     lcdUpdateTempHumid(temperature, humidity);
-    lcdUpdateDustCo(voltage, dustDensity);
-}
-
-
-void loop() {
-    wifiInit();
-    wifiClientInit();
-    wifiSendHTTPRequest(temperature, humidity, dustDensity, voltage);
-    t=millis();
-    wifiDeepSleep(55L*1000L);
-    lcdUpdateWifiStatus(WIFI_IDLE);
-    while (millis()-t<=60L*1000L){
-        wdt_reset();
-        if (configEnabled){
-            configStarted=1;
-            wifiInit();
-            wifiServerInit();
-            wifiServerListener();
-        }
-    }
-    dustRead(&voltage, &dustDensity);
-    dhtRead(&temperature, &humidity);
-    lcdUpdateTempHumid(temperature, humidity);
-    lcdUpdateDustCo(voltage, dustDensity);
-    if (dustDensity>0.2){
+    lcdUpdateDustCo(dustDensity, voltage);
+    if (dustDensity > 0.2) {
         ledSetRight(LED_RED);
         ledSetColor();
     } else {
         ledSetRight(LED_GREEN);
         ledSetColor();
+    }
+    wifiInit();
+    wifiClientInit();
+}
+
+
+void loop() {
+    if (!wifiSendHTTPRequest(temperature, humidity, dustDensity, voltage)){
+        wifiInit();
+        wifiClientInit();
+    }
+    t = millis();
+    if (config.sleepTime > 30) 
+        wifiDeepSleep((config.sleepTime - 15) * 1000);
+    lcdUpdateWifiStatus(WIFI_IDLE);
+    while (millis() - t <= (config.sleepTime * 1000)) {
+        wdt_reset();
+        if (configEnabled) {
+            configStarted = 1;
+            wifiInit();
+            wifiServerInit();
+            wifiServerListener();
+        }
+    }   
+    dustRead(&voltage, &dustDensity);
+    //coRead(&coDensity);
+    dhtRead(&temperature, &humidity);
+    lcdUpdateTempHumid(temperature, humidity);
+    lcdUpdateDustCo(dustDensity, voltage);
+    if (dustDensity > 0.2) {
+        ledSetRight(LED_RED);
+        ledSetColor();
+    } else {
+        ledSetRight(LED_GREEN);
+        ledSetColor();
+    }
+    if (config.sleepTime > 30){
+        wifiInit();
+        wifiClientInit();
     }
 }
