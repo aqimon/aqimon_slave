@@ -21,7 +21,8 @@ void lcdUpdateTempHumid(float temperature, float humidity) {
     lcd.print(F("C"));
     lcd.print(F(" Humid:"));
     lcd.print(humidStr);
-    lcd.print(F("%"));
+    if (humidity >= 100.0)
+        lcd.print(F("%"));
 }
 
 void lcdUpdateDustCo(float dustLevel, float coLevel) {
@@ -35,43 +36,22 @@ void lcdUpdateDustCo(float dustLevel, float coLevel) {
     lcd.print(coLevelStr);
 }
 
-void lcdUpdateWifiStatus(unsigned char status){
+void lcdUpdateWifiStatus(unsigned char n){
     lcd.setCursor(0, 1);
-    switch (status){
-        case WIFI_STARTING:
-            lcd.print(F("Wifi starting       "));
-            break;
-        case WIFI_CONNECTING_AP:
-            lcd.print(F("Connecting to AP    "));
-            break;
-        case WIFI_CONNECTING_HTTP:
-            lcd.print(F("Connecting to server"));
-            break;
-        case WIFI_SENDING:
-            lcd.print(F("Sending request     "));
-            break;
-        case WIFI_SENDOK:
-            lcd.print(F("Send successful     "));
-            break;
-        case WIFI_RESET:
-            lcd.print(F("Got error, resetting"));
-            break;
-        case WIFI_TIMEOUT:
-            lcd.print(F("Timeout             "));
-            break;
-        case WIFI_SERVER:
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print(F("Cfg server started  "));
-            lcd.setCursor(0, 1);
-            lcd.print(F("SSID    : MakerWeek "));
-            lcd.setCursor(0, 2);
-            lcd.print(F("Password: makerweek "));
-            lcd.setCursor(0, 3);
-            lcd.print(F("Cfg IP: 192.168.69.1"));
-            break;
-        case WIFI_IDLE:
-            lcd.print(F("Idle                "));
-            break;
+    lcd.print(F("                    "));
+    lcd.setCursor(0, 1);
+    switch(n){
+        case 1: lcd.print(F("Restarting SIM900"));
+        break;
+        case 2: lcd.print(F("Waiting for cellular"));
+        break;
+        case 3: lcd.print(F("Establishing GPRS"));
+        break;
+        case 4: lcd.print(F("Openning connection"));
+        break;
+        case 5: lcd.print(F("Sending request"));
+        break;
+        case 6: lcd.print(F("Send OK"));
+        break;
     }
 }

@@ -4,9 +4,12 @@
 #include "config/config.h"
 #include "lcd/lcd.h"
 #include "notification/led.h"
-#include "wifi/wifiCore.h"
-#include "wifi/wifiClient.h"
-#include "wifi/wifiServer.h"
+// #include "wifi/wifiCore.h"
+// #include "wifi/wifiClient.h"
+// #include "wifi/wifiServer.h"
+#include "sim900/sim900Core.h"
+#include "sim900/sim900Client.h"
+#include "buffer/buffer.h"
 #include <avr/wdt.h>
 
 void __attribute__((naked)) __attribute__((section(".init3"))) wdt_init(void) {
@@ -16,6 +19,13 @@ void __attribute__((naked)) __attribute__((section(".init3"))) wdt_init(void) {
 
 float temperature, humidity, dustDensity, coLevel, voltage, coDensity;
 unsigned long t;
+
+void busyloop(unsigned long duration){
+    unsigned long t = millis();
+    while (millis() - t <= duration){
+        wdt_reset();
+    }
+}
 
 void setup() {
     wdt_enable(WDTO_2S);
@@ -37,28 +47,35 @@ void setup() {
         ledSetRight(LED_GREEN);
         ledSetColor();
     }
-    wifiInit();
-    wifiClientInit();
+    sim900Init();
+    busyloop(3000);
+    sim900ClientInit();
 }
 
-
 void loop() {
-    if (!wifiSendHTTPRequest(temperature, humidity, dustDensity, voltage)){
-        wifiInit();
-        wifiClientInit();
+    while (!sim900SendHTTPRequest(temperature, humidity, dustDensity, voltage)){
+        sim900Init();
+        busyloop(3000);
+        sim900ClientInit();
     }
     t = millis();
-    if (config.sleepTime > 30) 
-        wifiDeepSleep((config.sleepTime - 15) * 1000);
-    lcdUpdateWifiStatus(WIFI_IDLE);
     while (millis() - t <= (config.sleepTime * 1000)) {
         wdt_reset();
-        if (configEnabled) {
-            configStarted = 1;
-            wifiInit();
-            wifiServerInit();
-            wifiServerListener();
-        }
+        // while (get_buffer_count != 0){
+        //     struct record_s record;
+        //   if (buffer_pop(*record)){
+        //         while (!wifiSendHTTPRequest(temperature, humidity, dustDensity, voltage)){
+        //             wifiInit();
+        //            wifiClientInit();
+        //         }           
+        //     }
+            // }
+        // if (configEnabled) {
+        //     configStarted = 1;
+        //     wifiInit();
+        //     wifiServerInit();
+        //     wifiServerListener();
+        // }
     }   
     dustRead(&voltage, &dustDensity);
     //coRead(&coDensity);
@@ -72,8 +89,8 @@ void loop() {
         ledSetRight(LED_GREEN);
         ledSetColor();
     }
-    if (config.sleepTime > 30){
-        wifiInit();
-        wifiClientInit();
-    }
+    // if (config.sleepTime > 30){
+    //     wifiInit();
+    //     wifiClientInit();
+    //}
 }
